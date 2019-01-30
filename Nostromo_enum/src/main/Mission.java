@@ -93,9 +93,9 @@ public class Mission {
 	public void print_cost(){
 
 		CostModel mission_cost = new CostModel(this.duration,this.nostromo.getMass().getDryMass(),this.power,this.factor_test);
-		System.out.println("Mission total cost: "+mission_cost.cost()+"€.");
-		System.out.println("Mission cost per kg: "+mission_cost.KgCost(this.nostromo.getMass().getTransportableMass())+"€.");
-		System.out.println("Mission cost per kilometer: "+mission_cost.KilometerCost(this.distance)+"€.");	
+		System.out.println("Mission total cost: "+mission_cost.cost()+"ï¿½.");
+//		System.out.println("Mission cost per kg: "+mission_cost.KgCost(this.nostromo.getMass().getTransportableMass())+"ï¿½.");
+		System.out.println("Mission cost per kilometer: "+mission_cost.KilometerCost(this.distance)+"ï¿½.");	
 	}
 	
 	public CostModel getcost(){
@@ -104,7 +104,7 @@ public class Mission {
 	
 	
 	/** Calculate the distance, duration etc... of the mission **/
-	public void launch(double mineral) {
+	public void launch(double mineral, Propulsion propu) {
 		
 		double m0 = 8000; // masse cargo
 		double m1 = mineral; // masse minerai
@@ -121,7 +121,7 @@ public class Mission {
 		Reach_Asteroid reach = new Reach_Asteroid(ISP);
 		ArrayList<Double> output_reach = reach.rdv(10*Constant.deg2rad, duration, total_thrust, m0);
 		Return_To_Earth coming_back = new Return_To_Earth(ISP);
-		ArrayList<Double> output_back = coming_back.rdv(10*Constant.deg2rad, duration*2, total_thrust, m0,m1); // duration *2, depend de l'entree
+		ArrayList<Double> output_back = coming_back.rdv(10*Constant.deg2rad, duration*8, total_thrust, m0,m1); // duration *2, depend de l'entree
 		
 		double dV_total = output_escape.get(0) + output_reach.get(0) + output_back.get(0);
 		double dM_total = output_escape.get(1) + output_reach.get(1) + output_back.get(1);
@@ -131,8 +131,13 @@ public class Mission {
 		System.out.println("dM escape: "+output_escape.get(1)+"      dM reach: "+output_reach.get(1)+"     dM back: "+output_back.get(1)+"\n");
 		
 		System.out.println("\n Pour une masse de "+m0+" kg, on a besoin de "+dM_total+" kg de carburant.");
-		System.out.println("dV total: "+dV_total+" m/s.   Durée totale: "+duration_total+" d. \n");
+		System.out.println("dV total: "+dV_total+" m/s.   Durï¿½e totale: "+duration_total+" d. \n");
 		this.dV_total = dV_total;
+		Mass masstot = new Mass(1000,propu.getDryMass()*propu.getnEngine(), dM_total);
+		masstot.UpdateTotalMass();
+		masstot.showDetails();
+		//System.out.println("Masse totale recalculÃ©e :  " + masstot.getTotalMass());
+		
 	}
 	
 	
@@ -145,9 +150,9 @@ public class Mission {
 		Asteroid target = Asteroid.ARM_341843_2008_EVS;
 		Propulsion ionic = Propulsion.SPT230_fakel_russe;
 		ionic.setnEngine(4);
-		//Panel solar_panel = ;
+	//	Panel solar_panel = new Panel(mission);
 		Launcher launcher = Launcher.FalconHeavy_Escape;
-		Mass cargo_mass = new Mass(ionic.getDryMass()*ionic.getnEngine(), 1000, 500);
+		Mass cargo_mass = new Mass(1000,ionic.getDryMass()*ionic.getnEngine(),500);
 		
 		Mission first_try = new Mission(target, cargo_mass, ionic,launcher);
 		
@@ -155,7 +160,7 @@ public class Mission {
 		/** Tests **/
 		first_try.duration = 1e8;
 		first_try.distance = 1.5e10;
-		double mass_wanted = 1000;
+		double mass_wanted = 10000;
 		
 		
 		/** Mission launching **/
@@ -166,10 +171,10 @@ public class Mission {
 		first_try.nostromo.getMass().showDetails();
 		
 		/** Trajectory test **/
-		first_try.launch(mass_wanted);
+		first_try.launch(mass_wanted, ionic);
 		
 		/** IHM **/
-		Window.WindowLaunch(first_try);
+		//Window.WindowLaunch(first_try);
 		
 		/** Cost part **/
 		System.out.println(first_try.getcost().costStr());

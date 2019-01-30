@@ -10,13 +10,13 @@ public enum Propulsion {
 	NEXTC_aerojet_rocketdyne("Xe",8.5,4190,0.236,6300),
 	RIT2X_ariane("Xe",8.5,2800,0.205,5000),
 	
-	// Moteur type a  effet Hall
+	// Moteur type aï¿½ effet Hall
 	PPS1350_safran("Xe",31,1700,0.088,1500),
 	PPS5000_safran("Xe",8.5,1950,0.250,5000),
 	PPS20000_safran("Xe",8.5,2500,0.980,20000),
 	XR5_aerojet_rocketdyne("Xe",8.5,1850,0.280,4500),
 	AEPS_aerojet_rocketdyne("Xe",100,2800,0.589,13300),
-	SPT230_fakel_russe("Xe",8.5,2700,0.784,1500);
+	SPT230_fakel_russe("Xe",30,2700,0.784,1500);
 	
 	
 	/** !! Dry mass verifications needed !! **/
@@ -24,10 +24,10 @@ public enum Propulsion {
 	String name; 
 	String typeOf_fuel;
 	//String type_moteur;   // GIE ou HALL
-	double dry_mass; 	//Quantité em kg
-	double ISP; 		// impulsion spécifique em s (nécessaire aux calculs) 
-	double thrust; 		// poussée max en N (nécessaire aux calculs)
-	double power;      // puissance max en W (nécessaire aux calculs)
+	double dry_mass; 	//Quantitï¿½ em kg
+	double ISP; 		// impulsion spï¿½cifique em s (nï¿½cessaire aux calculs) 
+	double thrust; 		// poussï¿½e max en N (nï¿½cessaire aux calculs)
+	double power;      // puissance max en W (nï¿½cessaire aux calculs)
 	int nEngine;	   // number of propulsors
 	
 	

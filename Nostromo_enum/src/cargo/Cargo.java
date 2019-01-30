@@ -27,7 +27,6 @@ public class Cargo {
 		this.diameter = 5;
 		this.length = 5;
 		this.cargo_mass = new Mass();
-		this.cargo_mass.setTransportableMass(returning_mass);
 		this.propulsion = propulsion;
 	}
 	public Cargo(Propulsion propulsion, Mass mass){
