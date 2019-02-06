@@ -18,7 +18,7 @@ public class CostModel {
 	double detailed_cost;
 	
 	double sol_segment = 5000000 * duration;
-	double inflation = 1.78/100;
+	double inflation = 1.78;
 	double plateform_mass;
     double structure_mass;
 	double thermic_mass;
@@ -61,22 +61,35 @@ public class CostModel {
 		this.command_mass = 0.02 * dry_mass;
 		double propulsion_mass;
 		double plateform_cost = 1064 + 35.5 * Math.pow(plateform_mass, 1.261);
+		//double plateform_cost = 108 * plateform_mass;
 		double structure_cost = 407 + 19.3 * structure_mass * Math.log10(structure_mass);
+		//double structure_cost = 22.8 * dry_mass;
 		double thermic_cost = 335 + 5.7 * Math.pow(thermic_mass, 2);
+		//double thermic_cost = 22.8 * dry_mass;
 		double scao_cost = 1850 + 11.7 * Math.pow(scao_mass, 2);
+		//double scao_cost = 165.9 * dry_mass;
 		double power_cost = 1261 + 539 * Math.pow(power_mass, 0.72);
+		//double power_cost = 25.5 * dry_mass;
 		double propulsion_cost = 89 + 3 * Math.pow(command_mass, 1.261);
+		//double propulsion_cost = 44.1 * dry_mass;
 		double telemetry_cost = 486 + 55.5 * Math.pow(telemetry_mass, 1.35);
+		//double telemetry_cost = 82.5 * dry_mass;;
 		double command_cost = 685 * 75 * Math.pow(command_mass, 1.35);
+		//double command_cost = 97.8 * dry_mass;
 		double payload_cost = 0.4 * plateform_cost;
 		double ait_cost = 0.139 * plateform_cost;
+		//double ait_cost = 0.195 * (plateform_cost+ payload_cost);
 		double program_cost = 0.229 * plateform_cost;
+		//double program_cost = 0.357 * (plateform_cost+ait_cost+payload_cost);
 		double launch_cost = 0.061 * plateform_cost;
+		//double launch_cost = 11.25* dry_mass;
 		double groundsegment_cost = 0.066 * plateform_cost;
+		//double groundsegment_cost = 5000*5;
+
 		this.detailed_cost = inflation * (plateform_cost + structure_cost + thermic_cost + scao_cost + power_cost + propulsion_cost + telemetry_cost + command_cost + payload_cost + ait_cost + program_cost + launch_cost + groundsegment_cost);
 
 		
-		this.detailed_cost = this.detailed_cost * 1e3;  // from k€ to €
+		this.detailed_cost = this.detailed_cost * 1e3;  // from kï¿½ to ï¿½
 	}
 	
 	/** Get function and cost per kilometers or kg **/
@@ -94,9 +107,9 @@ public class CostModel {
 	private static String simplified(double cost, double factor) {
 		cost = cost/factor;
 		return ((cost > 1e6) ?
-				(cost - cost%1e4)/1e6 +" M€" : ((cost > 1e3) ?
-						(cost - cost%10)/1e3 +" k€" : ((cost > 1) ?
-								(cost*100 - (cost*100)%1)/100+" €" : (cost*1000 - cost*1000%1)+" e-3€")));
+				(cost - cost%1e4)/1e6 +" Mï¿½" : ((cost > 1e3) ?
+						(cost - cost%10)/1e3 +" kï¿½" : ((cost > 1) ?
+								(cost*100 - (cost*100)%1)/100+" ï¿½" : (cost*1000 - cost*1000%1)+" e-3ï¿½")));
 	}
 	
 	public String costStr(){
