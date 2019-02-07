@@ -90,5 +90,80 @@ public class Reach_Asteroid {
 		return list_param;
 	}
 	
+	
+	/**
+	 * on considère que l'orbite de la Terre et de l'asteroide sont les mêmes
+	 * @param dephasage (rad)
+	 * @param duree (jours)
+	 * @param poussee (N)
+	 * @param masse (kg)
+	 * @return (deltaV (m/s), deltaM (kg), duree(jours))
+	 */
+	
+	public ArrayList<Double> rdvHohmann(double masse) {
+		double mu=Constant.muS;
+		double rT=this.sma_Earth;
+		double rA=this.semi_major_axis;
+		double a=0.5*(rT+rA);
+		ArrayList<Double> list_param = new ArrayList<Double>();
+		double deltaV1=-Math.sqrt(2*mu/rT-mu/a)+Math.sqrt(mu/rT);
+		double deltaV2=-Math.sqrt(mu/rA)+Math.sqrt(2*mu/rA-mu/a);
+		System.out.println(deltaV1);
+		System.out.println(deltaV2);
+		double deltaV=deltaV1 + deltaV2;
+		double deltaM=masse*(1-Math.exp(-deltaV/(this.Isp*Constant.g0)));
+		double dureeH=Math.PI*Math.sqrt(Math.pow(a, 3)/mu);
+		
+		list_param.add(deltaV);
+		list_param.add(deltaM);
+		list_param.add(dureeH/86400);
+
+		return list_param;
+	}
+	
+	
+	public ArrayList<Double> rdvFastHohmann(double duree,double masse) {
+		double mu=Constant.muS;
+		double rT=this.sma_Earth;
+		double rA=this.semi_major_axis;
+		double a=0.5*(rT+rA);
+		ArrayList<Double> list_param = new ArrayList<Double>();
+		double deltaV1=-Math.sqrt(2*mu/rT-mu/a)+Math.sqrt(mu/rT);
+		double deltaV2=-Math.sqrt(mu/rA)+Math.sqrt(2*mu/rA-mu/a);
+
+		double deltaV=deltaV1 + deltaV2;
+		double deltaM=masse*(1-Math.exp(-deltaV/(this.Isp*Constant.g0)));
+		double dureeH=Math.PI*Math.sqrt(Math.pow(a, 3)/mu);
+		double duration=dureeH/86400;
+		System.out.println("ATTEINDRE "+duree);
+		while (Math.abs((duration-duree))>10) {
+			a=a*1.1;
+			double eps=-mu/(2*a);
+			deltaV1=Math.abs(Math.sqrt(2*(eps+mu/rA))-Math.sqrt(2*(eps+mu/rT)));
+			double e=1-rT/a;
+			System.out.println("ECC "+e);
+
+			double p=a*(1-e*e);
+			double vR=Math.acos((1/e)*(p/rA-1));
+			System.out.println("vR "+(1/e)*(p/rA-1));
+
+			double alpha=Math.atan(e*Math.sin(vR)/(1+e*Math.cos(vR)));
+			deltaV2=Math.sqrt(2*(eps+mu/rA)+mu/rA-2*(mu/rA)*2*(eps+mu/rA)*Math.cos(alpha));
+			double E=Math.acos((e+Math.cos(vR))/(1+e*Math.cos(vR)));
+			double M=E-e*Math.sin(E);
+			duration=M*Math.sqrt(a*a*a/mu)/86400;
+			System.out.println("M  "+M*180/3.14);
+			System.out.println("DUR  "+duration);
+			deltaV=deltaV1+deltaV2;
+			deltaM=masse*(1-Math.exp(-deltaV/(this.Isp*Constant.g0)));
+
+		}
+		
+		list_param.add(deltaV);
+		list_param.add(deltaM);
+		list_param.add(duration);
+
+		return list_param;
+	}
 
 }

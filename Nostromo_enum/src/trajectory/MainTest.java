@@ -25,10 +25,11 @@ public class MainTest {
 		
 
 		Reach_Asteroid re=new Reach_Asteroid(ISP);
+		ArrayList<Double> list =re.rdvFastHohmann(75, 15000);
 		//ArrayList<Double> list= re.rdv(1000, 4.5, 15000.0);
 		//Return_To_Earth ret=new Return_To_Earth(ISP);
 		//ArrayList<Double> listret= ret.rdv(30*Math.PI/180,500, 4.5, 15000.0, 1000);
-	//	System.out.println(list.toString());
+		System.out.println(list.toString());
 		//System.out.println(listret.toString());
 	}
 
