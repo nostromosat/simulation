@@ -26,7 +26,7 @@ public class Panel {
 		
 		this.surface = mission.power/(rendement*transfert*puissance_Terre*Math.pow(distance_Terre/distance_max_soleil,2));
 		this.mass = surface*rapport_masse_surface;
-		mission.nostromo.getMass().setPanelMass(this.mass);
+//		mission.nostromo.getMass().setPanelMass(this.mass);
 	}
 	
 	

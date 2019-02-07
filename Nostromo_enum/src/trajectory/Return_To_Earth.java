@@ -77,7 +77,9 @@ public class Return_To_Earth {
 			ac_calc=-Constant.UA*dephasage/(3*t1*86400*86400*(duree-t1));
 		}
 		double deltaV=2*Math.abs(ac_calc)*t1*86400;
+		System.out.println("COUCOUCUCOUC  "+(masse_sys+masse_minerai));
 		double deltaM=(masse_sys+masse_minerai)*(1-Math.exp(-deltaV/(this.Isp*Constant.g0)));
+		System.out.println("CEST MOI   "+(1-Math.exp(-deltaV/(this.Isp*Constant.g0))));
 		list_param.add(deltaV);
 		list_param.add(deltaM);
 		list_param.add(duree);

@@ -169,8 +169,8 @@ public class Window extends JFrame {
 		transported.setPaintTicks(true);
 		transported.setPaintLabels(true);
 		mission_pan.add(transported);
-		mission.nostromo.getMass().setTransportableMass(transported.getMaximum());
-		mission.nostromo.getMass().setTransportedMass(transported.getValue());
+//		mission.nostromo.getMass().setTransportableMass(transported.getMaximum());
+//		mission.nostromo.getMass().setTransportedMass(transported.getValue());
 		
 		
 		JButton launch = new JButton("Launch");
@@ -247,7 +247,7 @@ public class Window extends JFrame {
 		Set_output(output_pan, kmCost_label, kmCost, mission.getcost().otherCostStr(mission.distance),3);
 		
 		JTextField kgCost = new JTextField();
-		Set_output(output_pan, kgCost_label, kgCost, mission.getcost().otherCostStr(mission.nostromo.getMass().getTransportedMass()),5);
+//		Set_output(output_pan, kgCost_label, kgCost, mission.getcost().otherCostStr(mission.nostromo.getMass().getTransportedMass()),5);
 
 		JTextField duration = new JTextField();
 		Set_output(output_pan, duration_label, duration, mission.date(mission.duration), 1);
