@@ -2,6 +2,8 @@ package cost;
 
 import java.util.ArrayList;
 
+import cargo.Mass;
+
 public class CostModel {
 	
 	double duration;		//s
@@ -9,23 +11,22 @@ public class CostModel {
 	double power;			// Watt
 	double factor_esa_nasa; // sans unite 
 	
-	/* factor_esa_nasa => Modele calculated on NASA consideration, factor needed to go back to an european
+	/* factor_esa_nasa => Model calculated on NASA consideration, factor needed to go back to an european
 	 * mission cost
 	 */
 	
 	ArrayList<Double> cost; //
 	double global_cost;
 	double detailed_cost;
-	
-	double sol_segment = 5000000 * duration;
+
 	double inflation = 1.78;
 	double plateform_mass;
     double structure_mass;
 	double thermic_mass;
 	double scao_mass;
 	double power_mass;
-	double telemetry_mass;
 	double command_mass;
+	double communication_mass;
 	double propulsion_mass;
 	
 	public CostModel(double duration, double dry_mass, double power, double factor) {
@@ -52,41 +53,27 @@ public class CostModel {
 		
 		
 		/** Calcul du cout bas niveau dans le constructeur du model **/
-		this.plateform_mass = dry_mass;
-		this.structure_mass = 0.24 * dry_mass;
-		this.thermic_mass = 0.02 * dry_mass;
-		this.scao_mass = 0.07 * dry_mass;
-		this.power_mass = 0.16 * dry_mass;
-		this.telemetry_mass = 0.045* dry_mass;
-		this.command_mass = 0.02 * dry_mass;
-		double propulsion_mass;
-		double plateform_cost = 1064 + 35.5 * Math.pow(plateform_mass, 1.261);
-		//double plateform_cost = 108 * plateform_mass;
-		double structure_cost = 407 + 19.3 * structure_mass * Math.log10(structure_mass);
-		//double structure_cost = 22.8 * dry_mass;
-		double thermic_cost = 335 + 5.7 * Math.pow(thermic_mass, 2);
-		//double thermic_cost = 22.8 * dry_mass;
-		double scao_cost = 1850 + 11.7 * Math.pow(scao_mass, 2);
-		//double scao_cost = 165.9 * dry_mass;
-		double power_cost = 1261 + 539 * Math.pow(power_mass, 0.72);
-		//double power_cost = 25.5 * dry_mass;
-		double propulsion_cost = 89 + 3 * Math.pow(command_mass, 1.261);
-		//double propulsion_cost = 44.1 * dry_mass;
-		double telemetry_cost = 486 + 55.5 * Math.pow(telemetry_mass, 1.35);
-		//double telemetry_cost = 82.5 * dry_mass;;
-		double command_cost = 685 * 75 * Math.pow(command_mass, 1.35);
-		//double command_cost = 97.8 * dry_mass;
-		double payload_cost = 0.4 * plateform_cost;
-		double ait_cost = 0.139 * plateform_cost;
-		//double ait_cost = 0.195 * (plateform_cost+ payload_cost);
-		double program_cost = 0.229 * plateform_cost;
-		//double program_cost = 0.357 * (plateform_cost+ait_cost+payload_cost);
-		double launch_cost = 0.061 * plateform_cost;
-		//double launch_cost = 11.25* dry_mass;
-		double groundsegment_cost = 0.066 * plateform_cost;
-		//double groundsegment_cost = 5000*5;
-
-		this.detailed_cost = inflation * (plateform_cost + structure_cost + thermic_cost + scao_cost + power_cost + propulsion_cost + telemetry_cost + command_cost + payload_cost + ait_cost + program_cost + launch_cost + groundsegment_cost);
+		this.plateform_mass = 4889;
+		this.structure_mass = 503;
+		this.thermic_mass = 171;
+		this.scao_mass = 83;
+		this.power_mass = 1000;
+		this.command_mass = 58;
+		this.communication_mass = 19;
+		this.propulsion_mass = 120;
+		double structure_cost = 646 * Math.pow(structure_mass + thermic_mass, 0.684);
+		double thermic_cost = 0;
+		double scao_cost = 324 * scao_mass;
+		double power_cost = 64.3 * power_mass;
+		double propulsion_cost = 20 * Math.pow(50, 0.485);
+		double telemetry_cost = 26916;
+		double communication_cost = 618 * communication_mass;
+		double payload_cost = 0;
+		double ait_cost = 0.357 * (telemetry_cost + propulsion_cost + power_cost + scao_cost + structure_cost);
+		double program_cost = 0.357 * (ait_cost + telemetry_cost + propulsion_cost + power_cost + scao_cost + structure_cost);
+		double launch_cost = 11.25 * dry_mass;
+		double groundsegment_cost = 5000 * (duration/(60*60*24*365));
+		this.detailed_cost = inflation * (structure_cost + thermic_cost + scao_cost + power_cost + propulsion_cost + telemetry_cost + communication_cost + payload_cost + ait_cost + program_cost + launch_cost + groundsegment_cost);
 
 		
 		this.detailed_cost = this.detailed_cost * 1e3;  // from k� to �
