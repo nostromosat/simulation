@@ -7,18 +7,17 @@ import cargo.Mass;
 public class CostModel {
 	
 	double duration;		//s
-	double dry_mass;		// kg, whole cargo
 	double power;			// Watt
 	double factor_esa_nasa; // sans unite 
 	
 	/* factor_esa_nasa => Model calculated on NASA consideration, factor needed to go back to an european
 	 * mission cost
 	 */
-	
+	Mass m;
 	ArrayList<Double> cost; //
 	double global_cost;
 	double detailed_cost;
-
+	double dry_mass;
 	double inflation = 1.78;
 	double plateform_mass;
     double structure_mass;
@@ -29,9 +28,9 @@ public class CostModel {
 	double communication_mass;
 	double propulsion_mass;
 	
-	public CostModel(double duration, double dry_mass, double power, double factor) {
+	public CostModel(double duration, Mass m, double power, double factor) {
 		this.duration = duration;
-		this.dry_mass = dry_mass;
+		this.dry_mass = m.getDryMass();
 		this.power = power;
 		this.factor_esa_nasa = factor;
 		
@@ -52,20 +51,21 @@ public class CostModel {
 		this.global_cost = this.global_cost * 1e3; // from k� to �
 		
 		
+		
 		/** Calcul du cout bas niveau dans le constructeur du model **/
-		this.plateform_mass = 4889;
-		this.structure_mass = 503;
-		this.thermic_mass = 171;
-		this.scao_mass = 83;
-		this.power_mass = 1000;
-		this.command_mass = 58;
-		this.communication_mass = 19;
-		this.propulsion_mass = 120;
+		this.plateform_mass = dry_mass;
+		this.structure_mass = m.getSTRMass();
+		this.thermic_mass = m.getTCMass();
+		this.scao_mass = m.getAOGNCMass();
+		this.power_mass = m.getPWRMass();
+		this.command_mass = m.getDHMass();
+		this.communication_mass = m.getCOMMass();
+		this.propulsion_mass = m.getPROPUMass();
 		double structure_cost = 646 * Math.pow(structure_mass + thermic_mass, 0.684);
 		double thermic_cost = 0;
 		double scao_cost = 324 * scao_mass;
 		double power_cost = 64.3 * power_mass;
-		double propulsion_cost = 20 * Math.pow(50, 0.485);
+		double propulsion_cost = 20 * Math.pow(1000000, 0.485);
 		double telemetry_cost = 26916;
 		double communication_cost = 618 * communication_mass;
 		double payload_cost = 0;

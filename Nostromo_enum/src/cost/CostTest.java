@@ -9,13 +9,13 @@ public class CostTest {
 		double scao_mass = 30;
 		double power_mass = 368;
 		double command_mass = 21;
-		double communication_mass = 7;
+		double communication_mass = 73;
 		double propulsion_mass = 44;
 		double structure_cost = 646 * Math.pow(structure_mass + thermic_mass, 0.684);
 		double thermic_cost = 0;
 		double scao_cost = 324 * scao_mass;
 		double power_cost = 64.3 * power_mass;
-		double propulsion_cost = 20 * Math.pow(50, 0.485);
+		double propulsion_cost = 20 * Math.pow(750000, 0.485);
 		double telemetry_cost = 26916;
 		double communication_cost = 618 * communication_mass;
 		double payload_cost = 0;
@@ -24,7 +24,7 @@ public class CostTest {
 		double launch_cost = 11.25 * plateform_mass;
 		double groundsegment_cost = 5000 * (5/(60*60*24*365));
 		double detailed_cost = 1.78 * (structure_cost + thermic_cost + scao_cost + power_cost + propulsion_cost + telemetry_cost + communication_cost + payload_cost + ait_cost + program_cost + launch_cost + groundsegment_cost);
-		detailed_cost = detailed_cost * 1e-3;  // from k� to �
+		detailed_cost = detailed_cost * 1e-3;
 		System.out.println("Cost Juice = " + detailed_cost+ " en millions euros");
 		return detailed_cost;
 		
@@ -37,13 +37,13 @@ public class CostTest {
 		double scao_mass = 45;
 		double power_mass = 552;
 		double command_mass = 32;
-		double communication_mass = 10;
+		double communication_mass = 109;
 		double propulsion_mass = 66;
 		double structure_cost = 646 * Math.pow(structure_mass + thermic_mass, 0.684);
 		double thermic_cost = 0;
 		double scao_cost = 324 * scao_mass;
 		double power_cost = 64.3 * power_mass;
-		double propulsion_cost = 20 * Math.pow(50, 0.485);
+		double propulsion_cost = 20 * Math.pow(750000, 0.485);
 		double telemetry_cost = 26916;
 		double communication_cost = 618 * communication_mass;
 		double payload_cost = 0;
@@ -52,7 +52,7 @@ public class CostTest {
 		double launch_cost = 11.25 * plateform_mass;
 		double groundsegment_cost = 5000 * (5/(60*60*24*365));
 		double detailed_cost = 1.78 * (structure_cost + thermic_cost + scao_cost + power_cost + propulsion_cost + telemetry_cost + communication_cost + payload_cost + ait_cost + program_cost + launch_cost + groundsegment_cost);
-		detailed_cost = detailed_cost * 1e-3;  // from k� to �
+		detailed_cost = detailed_cost * 1e-3;
 		System.out.println("Cost BepiColombo = " + detailed_cost + " en millions euros");
 		return detailed_cost;
 		
@@ -65,13 +65,13 @@ public class CostTest {
 		double scao_mass = 9;
 		double power_mass = 113;
 		double command_mass = 7;
-		double communication_mass = 2;
+		double communication_mass = 22;
 		double propulsion_mass = 14;
 		double structure_cost = 646 * Math.pow(structure_mass + thermic_mass, 0.684);
 		double thermic_cost = 0;
 		double scao_cost = 324 * scao_mass;
 		double power_cost = 64.3 * power_mass;
-		double propulsion_cost = 20 * Math.pow(50, 0.485);
+		double propulsion_cost = 20 * Math.pow(500000, 0.485);
 		double telemetry_cost = 26916;
 		double communication_cost = 618 * communication_mass;
 		double payload_cost = 0;
@@ -80,7 +80,7 @@ public class CostTest {
 		double launch_cost = 11.25 * plateform_mass;
 		double groundsegment_cost = 5000 * (5/(60*60*24*365));
 		double detailed_cost = 1.78 * (structure_cost + thermic_cost + scao_cost + power_cost + propulsion_cost + telemetry_cost + communication_cost + payload_cost + ait_cost + program_cost + launch_cost + groundsegment_cost);
-		detailed_cost = detailed_cost * 1e-3;  // from k� to �
+		detailed_cost = detailed_cost * 1e-3;
 		System.out.println("Cost Mariner = " + detailed_cost + " en millions euros");
 		return detailed_cost;
 		

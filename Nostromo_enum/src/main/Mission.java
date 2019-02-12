@@ -91,15 +91,22 @@ public class Mission {
 	}
 
 	public void print_cost(){
-
-		CostModel mission_cost = new CostModel(this.duration,this.nostromo.getMass().getDryMass(),this.power,this.factor_test);
+		Propulsion ionic = Propulsion.SPT230_fakel_russe;
+		ionic.setnEngine(4);
+		Launcher launcher = Launcher.FalconHeavy_Escape;
+		Mass cargo_mass = new Mass(1000,ionic.getDryMass()*ionic.getnEngine(),500);
+		CostModel mission_cost = new CostModel(this.duration,cargo_mass,this.power,this.factor_test);
 		System.out.println("Mission total cost: "+mission_cost.cost()+"�.");
 //		System.out.println("Mission cost per kg: "+mission_cost.KgCost(this.nostromo.getMass().getTransportableMass())+"�.");
 		System.out.println("Mission cost per kilometer: "+mission_cost.KilometerCost(this.distance)+"�.");	
 	}
 	
 	public CostModel getcost(){
-		return new CostModel(this.duration,this.nostromo.getMass().getDryMass(),this.power,this.factor_test);
+		Propulsion ionic = Propulsion.SPT230_fakel_russe;
+		ionic.setnEngine(4);
+		Launcher launcher = Launcher.FalconHeavy_Escape;
+		Mass cargo_mass = new Mass(1000,ionic.getDryMass()*ionic.getnEngine(),500);
+		return new CostModel(this.duration,cargo_mass,this.power,this.factor_test);
 	}
 	
 	
