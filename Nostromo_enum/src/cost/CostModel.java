@@ -27,7 +27,7 @@ public class CostModel {
 	double command_mass;
 	double communication_mass;
 	double propulsion_mass;
-	
+	double volume_tank;
 	public CostModel(double duration, Mass m, double power, double factor) {
 		this.duration = duration;
 		this.dry_mass = m.getDryMass();
@@ -61,19 +61,31 @@ public class CostModel {
 		this.command_mass = m.getDHMass();
 		this.communication_mass = m.getCOMMass();
 		this.propulsion_mass = m.getPROPUMass();
-		double structure_cost = 646 * Math.pow(structure_mass + thermic_mass, 0.684);
-		double thermic_cost = 0;
-		double scao_cost = 324 * scao_mass;
-		double power_cost = 64.3 * power_mass;
-		double propulsion_cost = 20 * Math.pow(1000000, 0.485);
-		double telemetry_cost = 26916;
-		double communication_cost = 618 * communication_mass;
-		double payload_cost = 0;
-		double ait_cost = 0.357 * (telemetry_cost + propulsion_cost + power_cost + scao_cost + structure_cost);
-		double program_cost = 0.357 * (ait_cost + telemetry_cost + propulsion_cost + power_cost + scao_cost + structure_cost);
-		double launch_cost = 11.25 * dry_mass;
+		this.volume_tank = 1000000;
+		// NR for non recurring cost
+		double structure_cost_nr = 646 * Math.pow(structure_mass + thermic_mass, 0.684);
+		double scao_cost_nr = 324 * scao_mass;
+		double power_cost_nr = 64.3 * power_mass;
+		double propulsion_cost_nr = 20 * Math.pow(volume_tank, 0.485);
+		double command_cost_nr = 26916;
+		double communication_cost_nr = 618 * communication_mass;
+		double ait_cost_nr = 0.357 * (command_cost_nr + propulsion_cost_nr + power_cost_nr + scao_cost_nr + structure_cost_nr);
+		double program_cost_nr = 0.357 * (ait_cost_nr + command_cost_nr + propulsion_cost_nr + power_cost_nr + scao_cost_nr + structure_cost_nr);
+		// R for recurring cost
+		double structure_cost_r = 22.6 * (structure_mass + thermic_mass);
+		double scao_cost_r = 795 * Math.pow(scao_mass, 0.593);
+		double power_cost_r = 32.4 * power_mass;
+		double propulsion_cost_r = 29 * propulsion_mass;
+		double command_cost_r = 883.7 * Math.pow(command_mass, 0.491);
+		double communication_cost_r = 189 * communication_mass;
+		double ait_cost_r = 0.124 * (communication_cost_r + structure_cost_r + scao_cost_r + power_cost_r + propulsion_cost_r + command_cost_r);
+		double program_cost_r = 0.320 * (communication_cost_r + structure_cost_r + scao_cost_r + power_cost_r + propulsion_cost_r + command_cost_r + ait_cost_r);
+		double launch_cost = 11.25 * dry_mass + 5850;
 		double groundsegment_cost = 5000 * (duration/(60*60*24*365));
-		this.detailed_cost = inflation * (structure_cost + thermic_cost + scao_cost + power_cost + propulsion_cost + telemetry_cost + communication_cost + payload_cost + ait_cost + program_cost + launch_cost + groundsegment_cost);
+		this.detailed_cost = inflation * (structure_cost_nr + scao_cost_nr + power_cost_nr + propulsion_cost_nr + 
+				command_cost_nr + communication_cost_nr + ait_cost_nr + program_cost_nr + 
+				structure_cost_r + scao_cost_r + power_cost_r + propulsion_cost_r + command_cost_r + 
+				communication_cost_r + ait_cost_r + program_cost_r + launch_cost + groundsegment_cost);
 
 		
 		this.detailed_cost = this.detailed_cost * 1e3;  // from k� to �
