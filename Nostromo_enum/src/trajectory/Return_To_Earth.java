@@ -87,5 +87,115 @@ public class Return_To_Earth {
 		return list_param;
 	}
 	
+	public ArrayList<Double> rdvHohmann(double masse,double masse_minerai, double poussee) {
+		double mu=Constant.muS;
+		double rT=this.sma_Earth;
+		double rA=this.semi_major_axis;
+		double a=0.5*(rT+rA);
+		ArrayList<Double> list_param = new ArrayList<Double>();
+		double deltaV1=Math.sqrt(2*mu/rA-mu/a)-Math.sqrt(mu/rA);
+		double deltaV2=Math.sqrt(mu/rT)-Math.sqrt(2*mu/rT-mu/a);
+		//System.out.println(deltaV1);
+		//System.out.println(deltaV2);
+		double deltaV=deltaV1 + deltaV2;
+		
+		double n=rT/rA;
+		double factor_lT=1/(Math.sqrt(2*(1+2*Math.sqrt(n)/(n+1)))-1);
+		deltaV=factor_lT*deltaV;
+		double deltaM=(masse+masse_minerai)*(1-Math.exp(-deltaV/(this.Isp*Constant.g0)));
+		double dureeH=Math.PI*Math.sqrt(Math.pow(a, 3)/mu);
+		double deltaV_inc=Math.sqrt(mu/rA)*(2-2*Math.cos(0.5*Math.PI*(this.inc_Earth-this.inclination)));
+		//System.out.println("INCLINATION "+deltaV_inc);
+		deltaV=deltaV+deltaV_inc;
+
+		list_param.add(deltaV);
+		list_param.add(deltaM);
+		list_param.add(dureeH/86400);
+		list_param.add(1.0);
+
+		// Verif compatible low thrust
+		double acc=poussee/(masse+masse_minerai);
+		double duree_lT=deltaV/acc;
+		//System.out.println("Duree low thrust  "+  (duree_lT/86400));
+		if (dureeH<2*duree_lT) {
+			//System.out.println("IMPOSSIBLE LOW THRUST");
+			list_param.set(3, 0.0);
+
+		}
+		double synodic_period=((360/this.meanmotion)*(360/this.meanmotion_Earth))/(Math.abs((360/this.meanmotion)-(360/this.meanmotion_Earth)));
+		//System.out.println("synodic period  "+ synodic_period/365 +" years");
+		return list_param;
+	}
+	
+	/**
+	 * @param dephasage (rad)
+	 * @param duree (jours)
+	 * @param poussee (N)
+	 * @param masse (kg)
+	 * @return (deltaV (m/s), deltaM (kg), duree(jours), 1 ou 0 low thrust, angle dephasage nécéssaire )
+	 */
+	public ArrayList<Double> rdvFastHohmann(double duree, double masse, double masse_minerai, double poussee) {
+		double mu=Constant.muS;
+		double rT=this.sma_Earth;
+		double rA=this.semi_major_axis;
+		double a=0.5*(rT+rA);
+		ArrayList<Double> list_param = new ArrayList<Double>();
+		double deltaV1=Math.sqrt(2*mu/rA-mu/a)-Math.sqrt(mu/rA);
+		double deltaV2=Math.sqrt(mu/rT)-Math.sqrt(2*mu/rT-mu/a);
+
+		double deltaV=deltaV1 + deltaV2;
+		double deltaM=(masse+masse_minerai)*(1-Math.exp(-deltaV/(this.Isp*Constant.g0)));
+		double dureeH=Math.PI*Math.sqrt(Math.pow(a, 3)/mu);
+		double duration=dureeH/86400;
+		//System.out.println(duration);
+		double M=0;
+		//System.out.println("ATTEINDRE "+duree+ " jours");
+		while (Math.abs((duration-duree))>5) {
+			a=a*1.0001;
+			deltaV1=(-Math.sqrt(mu/rA)+Math.sqrt(2*mu/rA-mu/a));
+
+			double e=1-rA/a;
+			double E=Math.acos((1/e)*(1-rT/a));
+			double vR=Math.acos((Math.cos(E)-e)/(1-e*Math.cos(E)));
+			double alpha=Math.atan(e*Math.sin(vR)/(1+e*Math.cos(vR)));
+			deltaV2=Math.sqrt(2*mu/rT-mu/a+mu/rT-2*Math.sqrt((mu/rT)*(2*mu/rT-mu/a))*Math.cos(alpha));
+			M=E-e*Math.sin(E);
+
+			duration=Math.abs(M)*Math.sqrt(a*a*a/mu)/86400;
+			//System.out.println("duree transfert  "+duration);
+
+			if (duration<duree) {
+				break;
+			}
+			
+			deltaV=deltaV1+deltaV2;
+			deltaM=(masse+masse_minerai)*(1-Math.exp(-deltaV/(this.Isp*Constant.g0)));
+
+		}
+		//System.out.println("Angle dephasage  "+(180/3.14)*Math.abs(M));
+		//System.out.println("dephasage par an  "+(this.meanmotion-this.meanmotion_Earth)*365);
+		
+		double n=rT/rA;
+		double factor_lT=1/(Math.sqrt(2*(1+2*Math.sqrt(n)/(n+1)))-1);
+		deltaV=factor_lT*deltaV;
+		deltaM=(masse+masse_minerai)*(1-Math.exp(-deltaV/(this.Isp*Constant.g0)));
+		double deltaV_inc=Math.sqrt(mu/rA)*(2-2*Math.cos(0.5*Math.PI*(this.inc_Earth-this.inclination)));
+		deltaV=deltaV+deltaV_inc;
+		list_param.add(deltaV);
+		list_param.add(deltaM);
+		list_param.add(duration);
+		list_param.add(1.0);
+		double acc=poussee/(masse+masse_minerai);
+		double duree_lT=deltaV/acc;
+		//System.out.println("Duree low thrust  "+  (duree_lT/86400));
+		if (dureeH<2*duree_lT) {
+			//System.out.println("IMPOSSIBLE LOW THRUST");
+			list_param.set(3, 0.0);
+		}
+		list_param.add((180/3.14)*Math.abs(M));
+		return list_param;
+	}
+
+	
 
 }

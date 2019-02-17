@@ -2,9 +2,9 @@ package trajectory;
 
 import infos.Constant;
 
-import java.text.ParseException;
+//import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
+//import java.util.Date;
 
 public class Reach_Asteroid {	
 	double aphelion; //m
@@ -55,11 +55,9 @@ public class Reach_Asteroid {
 	
 	public ArrayList<Double> rdv(double dephasage, double duree, double poussee, double masse) {
 		
-		long epoch2008=1228518000;
-		long epochJ2000=946728000;
-		long epochdate=System.currentTimeMillis()/1000;
-		double meananomaly=this.mean_anomaly+(this.meanmotion/86400)*(Math.PI/180)*(epochdate-epoch2008);
-		double MA_T=this.MA_Earth+(this.meanmotion_Earth/86400)*(Math.PI/180)*(epochdate-epochJ2000);
+		//long epoch2008=1228518000;
+		//long epochJ2000=946728000;
+		//long epochdate=System.currentTimeMillis()/1000;
 		//double dephasage=((meananomaly-MA_T) % (2* Math.PI));
 		System.out.println(dephasage);
 		// regarder la périodicité et les mouvements moyens pour savoir quand lancer
@@ -92,37 +90,61 @@ public class Reach_Asteroid {
 	
 	
 	/**
-	 * on considère que l'orbite de la Terre et de l'asteroide sont les mêmes
 	 * @param dephasage (rad)
 	 * @param duree (jours)
 	 * @param poussee (N)
 	 * @param masse (kg)
-	 * @return (deltaV (m/s), deltaM (kg), duree(jours))
+	 * @return (deltaV (m/s), deltaM (kg), duree(jours), 1 ou 0 en fonction de la possibilité low thrust)
 	 */
 	
-	public ArrayList<Double> rdvHohmann(double masse) {
+	public ArrayList<Double> rdvHohmann(double masse, double poussee) {
 		double mu=Constant.muS;
 		double rT=this.sma_Earth;
 		double rA=this.semi_major_axis;
 		double a=0.5*(rT+rA);
+		//System.out.println("ECCCC  "+(rT/a-1));
 		ArrayList<Double> list_param = new ArrayList<Double>();
 		double deltaV1=-Math.sqrt(2*mu/rT-mu/a)+Math.sqrt(mu/rT);
 		double deltaV2=-Math.sqrt(mu/rA)+Math.sqrt(2*mu/rA-mu/a);
-		System.out.println(deltaV1);
-		System.out.println(deltaV2);
+		//System.out.println(deltaV1);
+		//System.out.println(deltaV2);
 		double deltaV=deltaV1 + deltaV2;
-		double deltaM=masse*(1-Math.exp(-deltaV/(this.Isp*Constant.g0)));
+		double n=rA/rT;
+		double factor_lT=1/(Math.sqrt(2*(1+2*Math.sqrt(n)/(n+1)))-1);
+		deltaV=factor_lT*deltaV;
 		double dureeH=Math.PI*Math.sqrt(Math.pow(a, 3)/mu);
-		
+		double deltaV_inc=Math.sqrt(mu/rT)*(2-2*Math.cos(0.5*Math.PI*(this.inc_Earth-this.inclination)));
+	//	System.out.println("INCLINATION "+deltaV_inc);
+		deltaV=deltaV+deltaV_inc;
 		list_param.add(deltaV);
+		double deltaM=masse*(1-Math.exp(-deltaV/(this.Isp*Constant.g0)));
+
 		list_param.add(deltaM);
 		list_param.add(dureeH/86400);
+		list_param.add(1.0);
 
+		// Verif compatible low thrust
+		double acc=poussee/masse;
+		double duree_lT=deltaV/acc;
+		//System.out.println("Duree low thrust  "+  (duree_lT/86400));
+		if (dureeH<2*duree_lT) {
+			//System.out.println("IMPOSSIBLE LOW THRUST");
+			list_param.set(3, 0.0);
+
+		}
+		double synodic_period=((360/this.meanmotion)*(360/this.meanmotion_Earth))/(Math.abs((360/this.meanmotion)-(360/this.meanmotion_Earth)));
+		//System.out.println("synodic period  "+ synodic_period/365 +" years");
 		return list_param;
 	}
 	
-	
-	public ArrayList<Double> rdvFastHohmann(double duree,double masse) {
+	/**
+	 * @param dephasage (rad)
+	 * @param duree (jours)
+	 * @param poussee (N)
+	 * @param masse (kg)
+	 * @return (deltaV (m/s), deltaM (kg), duree(jours), 1 ou 0 low thrust, angle dephasage nécéssaire )
+	 */
+	public ArrayList<Double> rdvFastHohmann(double duree,double masse, double poussee) {
 		double mu=Constant.muS;
 		double rT=this.sma_Earth;
 		double rA=this.semi_major_axis;
@@ -135,35 +157,92 @@ public class Reach_Asteroid {
 		double deltaM=masse*(1-Math.exp(-deltaV/(this.Isp*Constant.g0)));
 		double dureeH=Math.PI*Math.sqrt(Math.pow(a, 3)/mu);
 		double duration=dureeH/86400;
-		System.out.println("ATTEINDRE "+duree);
-		while (Math.abs((duration-duree))>10) {
-			a=a*1.1;
-			double eps=-mu/(2*a);
-			deltaV1=Math.abs(Math.sqrt(2*(eps+mu/rA))-Math.sqrt(2*(eps+mu/rT)));
-			double e=1-rT/a;
-			System.out.println("ECC "+e);
+		//System.out.println(duration);
+		double M=0;
+		//System.out.println("ATTEINDRE "+duree+ " jours");
+		while (Math.abs((duration-duree))>5) {
+			a=a*0.9999;
+			deltaV1=(Math.sqrt(mu/rT)-Math.sqrt(2*mu/rT-mu/a));
 
-			double p=a*(1-e*e);
-			double vR=Math.acos((1/e)*(p/rA-1));
-			System.out.println("vR "+(1/e)*(p/rA-1));
-
+			double e=rT/a-1;
+			double E=Math.acos((1/e)*(1-rA/a));
+			double vR=Math.acos((Math.cos(E)-e)/(1-e*Math.cos(E)));
 			double alpha=Math.atan(e*Math.sin(vR)/(1+e*Math.cos(vR)));
-			deltaV2=Math.sqrt(2*(eps+mu/rA)+mu/rA-2*(mu/rA)*2*(eps+mu/rA)*Math.cos(alpha));
-			double E=Math.acos((e+Math.cos(vR))/(1+e*Math.cos(vR)));
-			double M=E-e*Math.sin(E);
-			duration=M*Math.sqrt(a*a*a/mu)/86400;
-			System.out.println("M  "+M*180/3.14);
-			System.out.println("DUR  "+duration);
+			deltaV2=Math.sqrt(2*mu/rA-mu/a+mu/rA-2*Math.sqrt((mu/rA)*(2*mu/rA-mu/a))*Math.cos(alpha));
+			M=E-e*Math.sin(E);
+
+			duration=Math.abs(Math.PI-M)*Math.sqrt(a*a*a/mu)/86400;
+			//System.out.println("duree transfert  "+duration);
+
+			if (duration<duree) {
+				break;
+			}
+			
 			deltaV=deltaV1+deltaV2;
 			deltaM=masse*(1-Math.exp(-deltaV/(this.Isp*Constant.g0)));
 
 		}
-		
+		double n=rA/rT;
+		double factor_lT=1/(Math.sqrt(2*(1+2*Math.sqrt(n)/(n+1)))-1);
+		deltaV=factor_lT*deltaV;
+		double deltaV_inc=Math.sqrt(mu/rT)*(2-2*Math.cos(0.5*Math.PI*(this.inc_Earth-this.inclination)));
+		//	System.out.println("INCLINATION "+deltaV_inc);
+		deltaV=deltaV+deltaV_inc;
+		deltaM=masse*(1-Math.exp(-deltaV/(this.Isp*Constant.g0)));
+
+		//System.out.println("Angle dephasage  "+(180/3.14)*Math.abs(Math.PI-M));
+		//System.out.println("dephasage par an  "+(this.meanmotion-this.meanmotion_Earth)*365);
 		list_param.add(deltaV);
 		list_param.add(deltaM);
 		list_param.add(duration);
-
+		list_param.add(1.0);
+		double acc=poussee/masse;
+		double duree_lT=deltaV/acc;
+		//System.out.println("Duree low thrust  "+  (duree_lT/86400));
+		if (dureeH<2*duree_lT) {
+			//System.out.println("IMPOSSIBLE LOW THRUST");
+			list_param.set(3, 0.0);
+		}
+		list_param.add((180/3.14)*Math.abs(Math.PI-M));
 		return list_param;
+	}
+	
+	public ArrayList<Double> rdvSpiral(double masse, double poussee) {
+		ArrayList<Double> list_param = new ArrayList<Double>();
+		double mu=Constant.muS;
+		double rT=this.sma_Earth;
+		double rA=this.semi_major_axis;
+		double v0=Math.sqrt(mu/(rT));
+		double m0=masse;
+		double v=v0;
+		double vnew=v0;
+		double dV=0.0;
+		double dV_global=0;
+		double m=m0;
+		double m_c=0;
+		double a=rT;
+		double t=0.0;
+		double deltaT=86400;
+		int i=0;
+		while (a>rA) {
+			a=a/Math.pow((1+poussee*deltaT/(m*v)),2);
+			vnew=Math.sqrt(mu/a);
+			dV=vnew-v;
+			dV_global=dV_global+dV;
+			m_c=m_c+m*(1-Math.exp(-dV/(this.Isp*Constant.g0)));
+			
+			v=vnew;
+			i=i+1;
+			t=t+deltaT;
+			System.out.println(m);
+		}
+		
+		list_param.add(dV_global);
+		list_param.add(m_c);
+		list_param.add(t/86400);
+		
+		return list_param;
+		
 	}
 
 }
