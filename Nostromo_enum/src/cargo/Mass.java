@@ -6,6 +6,7 @@ public class Mass {
 	private double fuel_mass;	// propellant
 	private double ore_mass;	// asteroid's ore we carry
 	private double total_mass;	// total mass
+	private boolean panel_done = false;
 	
 	private double AOGNC_mass;	// attitude, orbit, guidance, navigation, control
 	private double COM_mass;	// communications
@@ -16,8 +17,6 @@ public class Mass {
 	private double PWR_mass;	// power
 	private double STR_mass;	// structure
 	private double TC_mass;		// thermal control
-	
-	private double Panel_mass; // Solar panels mass
 	
 	/** Constructors **/
 	public Mass(double powerMass, double propulsionMass, double fuelMass){
@@ -68,7 +67,6 @@ public class Mass {
 		this.PWR_mass = 0;
 		this.STR_mass = 0;
 		this.TC_mass = 0;
-		this.Panel_mass = 0;
 	}
 	
 	/** Calcul final (iteratif) de la masse totale **/
@@ -117,9 +115,6 @@ public class Mass {
 	}
 	public double getTCMass(){
 		return this.TC_mass;
-	}
-	public double getPanelMass(){
-		return this.Panel_mass;
 	}
 	
 	public double getTotalMass(){
@@ -176,8 +171,12 @@ public class Mass {
 		UpdateTotalMass();
 	}
 	public void setPanelMass(double mass){
-		this.Panel_mass = mass;
-		UpdateTotalMass();
+		if(!this.panel_done){
+			this.PWR_mass += mass;
+			UpdateTotalMass();
+		}
+		else 
+			System.out.println("Panel mass already added.");
 	}
 	
 	
@@ -195,7 +194,6 @@ public class Mass {
 		System.out.println(".....");
 		System.out.println(".....Propellant: " + this.fuel_mass + " kg");
 		System.out.println(".....Asteroid's ore: " + this.ore_mass + " kg");
-		System.out.println(".....Panel mass: "+this.Panel_mass+" kg");
 		System.out.println(".....Total: " + this.total_mass + " kg");
 	}
 }
