@@ -45,6 +45,12 @@ public class Cargo {
 		System.out.println("	-propulsion type: "+this.propulsion.name.toString()+"\n");
 	}
 	
+	/** "set" functions **/
+	public void setPanel(Panel pan) {
+		this.panel = pan;
+		this.cargo_mass.setPanelMass(pan.mass);
+	}
+	
 	/**** "get" functions ****/
 	public double getDiameter() {
 		return this.diameter;
@@ -57,5 +63,8 @@ public class Cargo {
 	}
 	public Propulsion getPropulsion() {
 		return this.propulsion;
+	}
+	public Panel getPanel(){
+		return this.panel;
 	}
 }
