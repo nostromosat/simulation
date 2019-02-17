@@ -44,7 +44,7 @@ public class Escape_Earth {
 			v=vnew;
 			i=i+1;
 			t=t+Constant.s2d;
-			System.out.println(dV);
+			//System.out.println(dV);
 		}
 		/**System.out.println("Terminé");
 		System.out.println("Temps (jour): ");
