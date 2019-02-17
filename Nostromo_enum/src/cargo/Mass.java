@@ -1,4 +1,5 @@
 package cargo;
+import infos.*;
 
 public class Mass {
 	
@@ -21,7 +22,7 @@ public class Mass {
 	public Mass(double powerMass, double propulsionMass, double fuelMass){
 		System.out.println(powerMass+"  "+propulsionMass+"  "+fuelMass);
 		setPwrMass(powerMass);
-		setPropuMass(propulsionMass);
+		setPropuMass(Constant.HYDMF*(propulsionMass + fuelMass/Constant.Xe_density*Constant.TCD));
 		setFuelMass(fuelMass);
 		System.out.println(this.PROPU_mass);
 
