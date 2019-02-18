@@ -147,12 +147,11 @@ public class Mission {
 		Asteroid target = Asteroid.ARM_341843_2008_EVS;
 		Propulsion ionic = Propulsion.SPT230_fakel_russe;
 		ionic.setnEngine(4);
-	//	Panel solar_panel = new Panel(mission);
 		Launcher launcher = Launcher.Ariane64_LEO;
 		Mass cargo_mass = new Mass(1000,ionic.getDryMass()*ionic.getnEngine(),500);
 		
 		Mission first_try = new Mission(target, cargo_mass, ionic,launcher);
-		
+		first_try.nostromo.setPanel(new Panel(first_try));		
 		
 		/** Tests **/
 		first_try.duration = 1e8;
