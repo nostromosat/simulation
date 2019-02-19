@@ -1,22 +1,23 @@
 package cargo;
+import infos.*;
 
 public enum Propulsion {
 	
 	// Moteur type GIE
-	NSTAR_boeing("Xe",48,3100,0.092,2570),
-	XIPS25_l3_boeing("Xe",13.7,3550,0.0092,2570),
-	T6_qnetiq_bepi_colombo("Xe",8.5,4000,0.125,4500),
-	T7_qnetiq("Xe",8.5,4000,0.290,7000),
-	NEXTC_aerojet_rocketdyne("Xe",8.5,4190,0.236,6300),
-	RIT2X_ariane("Xe",8.5,2800,0.205,5000),
+	NSTAR_boeing("Xe",8.2,3100,0.092,2570,9),
+	XIPS25_l3_boeing("Xe",13.7,3550,0.0092,4250,9),
+	T6_qnetiq_bepi_colombo("Xe",8.5,4000,0.125,4500,9),
+	T7_qnetiq("Xe",13.2,4000,0.290,7000,5),
+	NEXTC_aerojet_rocketdyne("Xe",12,4190,0.236,6300,6),
+	RIT2X_ariane("Xe",10,2800,0.205,5000,6),
 	
 	// Moteur type a� effet Hall
-	PPS1350_safran("Xe",31,1700,0.088,1500),
-	PPS5000_safran("Xe",8.5,1950,0.250,5000),
-	PPS20000_safran("Xe",8.5,2500,0.980,20000),
-	XR5_aerojet_rocketdyne("Xe",8.5,1850,0.280,4500),
-	AEPS_aerojet_rocketdyne("Xe",100,2800,0.589,13300),
-	SPT230_fakel_russe("Xe",30,2700,0.784,1500);
+	PPS1350_safran("Xe",5.3,1700,0.088,1500,9),
+	PPS5000_safran("Xe",10,1950,0.250,5000,8),
+	PPS20000_safran("Xe",40,2500,0.980,20000,4),
+	XR5_aerojet_rocketdyne("Xe",10,1850,0.280,4500,9),
+	AEPS_aerojet_rocketdyne("Xe",100,2800,0.589,13300,6),
+	SPT230_fakel_russe("Xe",30,2700,0.784,15000,5);
 	
 	
 	/** !! Dry mass verifications needed !! **/
@@ -29,17 +30,18 @@ public enum Propulsion {
 	double thrust; 		// pouss�e max en N (n�cessaire aux calculs)
 	double power;      // puissance max en W (n�cessaire aux calculs)
 	int nEngine;	   // number of propulsors
-	
+	int TRL;		  //Technology Readiness Level (1-9)
 	
 
-	Propulsion(String type, double mass, double ISP, double thrust, double power)  {
+	Propulsion(String type, double mass, double ISP, double thrust, double power, int TRL)  {
 		this.name = Propulsion.this.name();
 		this.typeOf_fuel = type;
-		this.dry_mass = mass;
+		this.dry_mass = mass+power*Constant.HMPF+Constant.PPSM;
 		this.ISP = ISP;
 		this.thrust = thrust;
 		this.power = power;
 		this.nEngine = 1;
+		this.TRL = TRL;
 	}
 	
 	/** Get functions **/
@@ -85,7 +87,8 @@ public enum Propulsion {
 		System.out.println("	-dry mass: "+this.dry_mass+" kg");
 		System.out.println("	-ISP: "+this.ISP+" s");
 		System.out.println("	-thrust: "+this.thrust+" N");
-		System.out.println("	-power: "+this.power+" W\n");
+		System.out.println("	-power: "+this.power+" W");
+		System.out.println("	-TRL: "+this.TRL+" \n");
 	}
 }
 

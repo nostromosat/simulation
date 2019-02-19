@@ -1,10 +1,12 @@
 package cargo;
+import infos.*;
 
 public class Mass {
 	
 	private double fuel_mass;	// propellant
 	private double ore_mass;	// asteroid's ore we carry
 	private double total_mass;	// total mass
+	private boolean panel_done = false;
 	
 	private double AOGNC_mass;	// attitude, orbit, guidance, navigation, control
 	private double COM_mass;	// communications
@@ -16,12 +18,11 @@ public class Mass {
 	private double STR_mass;	// structure
 	private double TC_mass;		// thermal control
 	
-	
 	/** Constructors **/
 	public Mass(double powerMass, double propulsionMass, double fuelMass){
 		System.out.println(powerMass+"  "+propulsionMass+"  "+fuelMass);
 		setPwrMass(powerMass);
-		setPropuMass(propulsionMass);
+		setPropuMass(Constant.HYDMF*(propulsionMass + fuelMass/Constant.Xe_density*Constant.TCD));
 		setFuelMass(fuelMass);
 		System.out.println(this.PROPU_mass);
 
@@ -169,6 +170,15 @@ public class Mass {
 		this.TC_mass = tcMass;
 		UpdateTotalMass();
 	}
+	public void setPanelMass(double mass){
+		if(!this.panel_done){
+			this.PWR_mass += mass;
+			UpdateTotalMass();
+		}
+		else 
+			System.out.println("Panel mass already added.");
+	}
+	
 	
 	public void showDetails(){
 		System.out.println("Mass details:");

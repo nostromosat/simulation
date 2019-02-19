@@ -113,7 +113,7 @@ public class Mission {
 	/** Calculate the distance, duration etc... of the mission **/
 	public void launch(double mineral, Propulsion propu) {
 		
-		double m0 = 8000; // masse cargo
+		double m0 = 10000; // masse cargo
 		double m1 = mineral; // masse minerai
 		
 		double total_thrust = this.nostromo.getPropulsion().getThrust()*this.nostromo.getPropulsion().getnEngine(); 
@@ -123,27 +123,17 @@ public class Mission {
 		double duration = 250;
 		
 		/**********************Dorian part******************************/
-		Escape_Earth traj = new Escape_Earth(m0,total_thrust,ISP);
-		ArrayList<Double> output_escape = traj.LEO_to_Escape(1000000);
-		Reach_Asteroid reach = new Reach_Asteroid(ISP);
-		ArrayList<Double> output_reach = reach.rdv(10*Constant.deg2rad, duration, total_thrust, m0);
-		Return_To_Earth coming_back = new Return_To_Earth(ISP);
-		ArrayList<Double> output_back = coming_back.rdv(10*Constant.deg2rad, duration*8, total_thrust, m0,m1); // duration *2, depend de l'entree
+		for (int i=0;i<100;i++) {
 		
-		double dV_total = output_escape.get(0) + output_reach.get(0) + output_back.get(0);
-		double dM_total = output_escape.get(1) + output_reach.get(1) + output_back.get(1);
-		double duration_total = output_escape.get(2) + output_reach.get(2) + output_back.get(2);
-		
-		System.out.println("\ndV escape: "+output_escape.get(0)+"      dV reach: "+output_reach.get(0)+"     dV back: "+output_back.get(0));
-		System.out.println("dM escape: "+output_escape.get(1)+"      dM reach: "+output_reach.get(1)+"     dM back: "+output_back.get(1)+"\n");
-		
-		System.out.println("\n Pour une masse de "+m0+" kg, on a besoin de "+dM_total+" kg de carburant.");
-		System.out.println("dV total: "+dV_total+" m/s.   Dur�e totale: "+duration_total+" d. \n");
-		this.dV_total = dV_total;
+		ArrayList<Double> traj = Trajectory.computeTrajectoryHohmann(m0, m1, total_thrust, ISP, 100000);
+		double dM_total=traj.get(1);
+		this.dV_total = traj.get(0);
 		Mass masstot = new Mass(1000,propu.getDryMass()*propu.getnEngine(), dM_total);
 		masstot.UpdateTotalMass();
-		masstot.showDetails();
-		//System.out.println("Masse totale recalculée :  " + masstot.getTotalMass());
+		//masstot.showDetails();
+		m0=masstot.getTotalMass();
+		System.out.println("Masse totale recalculée :  " + masstot.getTotalMass());
+		}
 		
 	}
 	
@@ -157,12 +147,11 @@ public class Mission {
 		Asteroid target = Asteroid.ARM_341843_2008_EVS;
 		Propulsion ionic = Propulsion.SPT230_fakel_russe;
 		ionic.setnEngine(4);
-	//	Panel solar_panel = new Panel(mission);
-		Launcher launcher = Launcher.FalconHeavy_Escape;
+		Launcher launcher = Launcher.Ariane64_LEO;
 		Mass cargo_mass = new Mass(1000,ionic.getDryMass()*ionic.getnEngine(),500);
 		
 		Mission first_try = new Mission(target, cargo_mass, ionic,launcher);
-		
+		first_try.nostromo.setPanel(new Panel(first_try));		
 		
 		/** Tests **/
 		first_try.duration = 1e8;
@@ -171,11 +160,13 @@ public class Mission {
 		
 		
 		/** Mission launching **/
+		/**
 		first_try.showDetails();
 		first_try.target.showDetails();
 		first_try.nostromo.showDetails();
 		first_try.nostromo.getPropulsion().showDetails();
 		first_try.nostromo.getMass().showDetails();
+		*/
 		
 		/** Trajectory test **/
 		first_try.launch(mass_wanted, ionic);
