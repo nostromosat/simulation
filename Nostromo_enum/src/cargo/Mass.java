@@ -54,6 +54,40 @@ public class Mass {
 		System.out.println(this.fuel_mass);
 
 	}
+	public Mass(double powerMass, double propulsionMass, double fuelMass,double ore_mass){
+		System.out.println(powerMass+"  "+propulsionMass+"  "+fuelMass);
+		setPwrMass(powerMass);
+		setPropuMass(Constant.HYDMF*(propulsionMass + fuelMass/Constant.Xe_density*Constant.TCD));
+		setFuelMass(fuelMass);
+		System.out.println(this.PROPU_mass);
+
+		
+		// mass distribution calculated on 5 different missions (% of total mass)
+		double pAOGNC = 0.0205;	// 2.05%
+		double pCOM = 0.0490;	// 4.90%
+		double pDH = 0.0144;	// 1.44%
+		double pHAR = 0.0289;	// 2.89%
+		double pMEC = 0.0579;	// 5.79%
+		double pPROPU = 0.1191;	// 11.91%
+		double pPWR = 0.1402;	// 14.02%
+		double pSTR = 0.1236;	// 12.36%
+		double pTC = 0.0421;	// 4.21%
+		
+		// we've noticed that pPROPU varies a lot so let's calculate everything only using pPROPU and pPWR
+		double estimatedTotalMass = (propulsionMass / pPROPU + powerMass / pPWR) / 2; // temporary estimation
+		
+		setAogncMass(estimatedTotalMass * pAOGNC);
+		setComMass(estimatedTotalMass * pCOM);
+		setDhMass(estimatedTotalMass * pDH);
+		setHarMass(estimatedTotalMass * pHAR);
+		setMecMass(estimatedTotalMass * pMEC);
+		setStrMass(estimatedTotalMass * pSTR);
+		setTcMass(estimatedTotalMass * pTC);
+		
+		// how much asteroid's ore will we carry ?
+		setOreMass(ore_mass);
+
+	}
 	public Mass(){
 		this.fuel_mass = 0;
 		this.ore_mass = 0;
