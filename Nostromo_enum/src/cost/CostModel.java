@@ -18,7 +18,7 @@ public class CostModel {
 	double global_cost;
 	double detailed_cost;
 	double dry_mass;
-	double inflation = 1.78;
+	double inflation = 1.15;
 	double plateform_mass;
     double structure_mass;
 	double thermic_mass;
@@ -32,7 +32,7 @@ public class CostModel {
 		this.duration = duration;
 		this.dry_mass = m.getDryMass();
 		this.power = power;
-		this.factor_esa_nasa = factor;
+		this.factor_esa_nasa = 1;
 		
 		/** Calcul du cout haut niveau dans le constructeur du model **/
 		double data_rate = 0.3;
@@ -82,12 +82,10 @@ public class CostModel {
 		double program_cost_r = 0.320 * (communication_cost_r + structure_cost_r + scao_cost_r + power_cost_r + propulsion_cost_r + command_cost_r + ait_cost_r);
 		double launch_cost = 11.25 * dry_mass + 5850;
 		double groundsegment_cost = 5000 * (duration/(60*60*24*365));
-		this.detailed_cost = inflation * (structure_cost_nr + scao_cost_nr + power_cost_nr + propulsion_cost_nr + 
+		this.detailed_cost = 0.88429 * inflation * (structure_cost_nr + scao_cost_nr + power_cost_nr + propulsion_cost_nr + 
 				command_cost_nr + communication_cost_nr + ait_cost_nr + program_cost_nr + 
 				structure_cost_r + scao_cost_r + power_cost_r + propulsion_cost_r + command_cost_r + 
 				communication_cost_r + ait_cost_r + program_cost_r + launch_cost + groundsegment_cost);
-
-		
 		this.detailed_cost = this.detailed_cost * 1e3;  // from k� to �
 	}
 	
