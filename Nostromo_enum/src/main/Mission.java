@@ -109,6 +109,13 @@ public class Mission {
 		return new CostModel(this.duration,cargo_mass,this.power,this.factor_test);
 	}
 	
+	public double getKgCost(){
+		this.launch(10000,this.nostromo.getPropulsion());
+		double got_mass = this.nostromo.getMass().getOreMass();
+		return new CostModel(this.duration,
+				     this.nostromo.getMass(),
+				     this.nostromo.getPropulsion().getPower(),this.factor_test).KgCost(got_mass);
+	}	
 	
 	/** Calculate the distance, duration etc... of the mission **/
 	public void launch(double mineral, Propulsion propu) {
