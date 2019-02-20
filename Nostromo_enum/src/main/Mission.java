@@ -122,12 +122,23 @@
  		
  		
  		/**********************Dorian part******************************/
+ 		ArrayList<Double> traj = new ArrayList<Double>();
  		for (int i=0;i<100;i++) {
- 		
-		ArrayList<Double> traj = Trajectory.computeTrajectoryHohmann(m0, m1, total_thrust, ISP, 100000);
-		//ArrayList<Double> traj = Trajectory.computeTrajectoryEllipticGTO(m0, m1, total_thrust, ISP, 200000,36000000);
+ 		switch(this.launcher.getOrbit()) {
+ 		case "LEO" :
+ 			traj = Trajectory.computeTrajectoryEllipticLEO(m0, m1, total_thrust, ISP, 100000);
 
-		//ArrayList<Double> traj = Trajectory.computeTrajectoryEllipticEscape(m0, m1, total_thrust, ISP); 		
+ 			break;
+ 		case "GTO" :
+ 			traj = Trajectory.computeTrajectoryEllipticGTO(m0, m1, total_thrust, ISP, 200000,36000000);
+
+ 			break;
+ 		case "Escape":
+ 			traj = Trajectory.computeTrajectoryEllipticEscape(m0, m1, total_thrust, ISP); 		
+
+ 			break;
+ 		}
+
 		this.dV_total = traj.get(0);
 		double dM_total=traj.get(1);
  		this.duration = traj.get(2);
@@ -136,9 +147,20 @@
  		//masstot.showDetails();
  		m0=masstot.getTotalMass();
  		this.nostromo.setMass(masstot);
- 		
+ 		System.out.println("delta V total :  " + this.dV_total);
+
  		System.out.println("Masse totale recalculee :  " + masstot.getTotalMass());
  		}
+ 		
+ 		if (this.duration > 365*5) {
+ 			this.nostromo.getMass().setOreMass(0);
+ 		}
+ 		
+ 		if (this.nostromo.getMass().getTotalMass()>this.launcher.getMaxWeight()) {
+	 			this.nostromo.getMass().setOreMass(0);
+
+		}
+ 	
  		
  		
  	}
@@ -153,7 +175,7 @@
  		
  		/**Mission Creation**/
  		Asteroid target = Asteroid.ARM_341843_2008_EVS;
- 		Propulsion ionic = Propulsion.SPT230_fakel_russe;
+ 		Propulsion ionic = Propulsion.PPS1350_safran;
  		ionic.setnEngine(4);
  		Launcher launcher = Launcher.Ariane64_LEO;
  		Panel pan = new Panel(ionic, target);

@@ -343,7 +343,7 @@ double masse_current;
 				double masse_toG=traj_toGEO.get(1);
 				double duree_toG=traj_toGEO.get(2);
 				
-				System.out.println("-------------------------------");		
+				/**System.out.println("-------------------------------");		
 				System.out.println("deltaV escape  : "+deltaV_esc);
 				System.out.println("deltaV reach  : "+deltaV_reach);
 				System.out.println("deltaV mission  : "+deltaV_mission);
@@ -365,7 +365,7 @@ double masse_current;
 				System.out.println("duree toGEO  : "+duree_toG);
 
 				
-				System.out.println("-------------------------------");		
+				System.out.println("-------------------------------");*/		
 				double deltaV_tot=deltaV_esc+deltaV_reach+deltaV_mission+deltaV_ret+deltaV_toG;
 				double masse_tot=masse_esc+masse_reach+masse_mission+masse_ret+masse_toG;
 				double duree_tot=duree_esc+duree_reach+duree_mission+duree_ret+duree_toG;
@@ -373,15 +373,15 @@ double masse_current;
 				traj.add(deltaV_tot);
 				traj.add(masse_tot);
 				traj.add(duree_tot);
-				System.out.println("delta V total  : "+ deltaV_tot);
-				System.out.println("Masse totale  : "+masse_tot);
-				System.out.println("Duree totale  : "+duree_tot);
+				//System.out.println("delta V total  : "+ deltaV_tot);
+				//System.out.println("Masse totale  : "+masse_tot);
+				//System.out.println("Duree totale  : "+duree_tot);
 				
 				if (traj_reach.get(3)==0) {
-					System.out.println("Atteinte impossible en low thrust");
+					//System.out.println("Atteinte impossible en low thrust");
 				}
 				if (traj_return.get(3)==0) {
-					System.out.println("Retour impossible en low thrust");
+					//System.out.println("Retour impossible en low thrust");
 				}
 				
 				
@@ -433,7 +433,7 @@ double masse_current;
 			double deltaV_toG=traj_toGEO.get(0);
 			double masse_toG=traj_toGEO.get(1);
 			double duree_toG=traj_toGEO.get(2);
-			
+			/*
 			System.out.println("-------------------------------");		
 			System.out.println("deltaV escape  : "+deltaV_esc);
 			System.out.println("deltaV reach  : "+deltaV_reach);
@@ -456,7 +456,7 @@ double masse_current;
 			System.out.println("duree toGEO  : "+duree_toG);
 
 			
-			System.out.println("-------------------------------");		
+			System.out.println("-------------------------------");*/		
 			double deltaV_tot=deltaV_esc+deltaV_reach+deltaV_mission+deltaV_ret+deltaV_toG;
 			double masse_tot=masse_esc+masse_reach+masse_mission+masse_ret+masse_toG;
 			double duree_tot=duree_esc+duree_reach+duree_mission+duree_ret+duree_toG;
@@ -464,15 +464,15 @@ double masse_current;
 			traj.add(deltaV_tot);
 			traj.add(masse_tot);
 			traj.add(duree_tot);
-			System.out.println("delta V total  : "+ deltaV_tot);
-			System.out.println("Masse totale  : "+masse_tot);
-			System.out.println("Duree totale  : "+duree_tot);
+			//System.out.println("delta V total  : "+ deltaV_tot);
+			//System.out.println("Masse totale  : "+masse_tot);
+			//System.out.println("Duree totale  : "+duree_tot);
 			
 			if (traj_reach.get(3)==0) {
-				System.out.println("Atteinte impossible en low thrust");
+				//System.out.println("Atteinte impossible en low thrust");
 			}
 			if (traj_return.get(3)==0) {
-				System.out.println("Retour impossible en low thrust");
+				//System.out.println("Retour impossible en low thrust");
 			}
 			
 			

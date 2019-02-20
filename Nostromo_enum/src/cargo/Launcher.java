@@ -46,6 +46,9 @@ public enum Launcher {
 	public String getLauncher() {
 		return this.launcher;
 	}
+	public String getOrbit() {
+		return this.orbit;
+	}
 	public void showDetails(){
 		System.out.println("Launcher details:");
 		System.out.println("	-type: "+this.launcher);
