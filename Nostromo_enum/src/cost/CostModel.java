@@ -8,9 +8,7 @@ public class CostModel {
 	
 	double duration;		//s
 	double power;			// Watt
-	double factor_esa_nasa; // sans unite 
 	
-	/* factor_esa_nasa => Model calculated on NASA consideration, factor needed to go back to an european
 	 * mission cost
 	 */
 	Mass m;
@@ -28,11 +26,10 @@ public class CostModel {
 	double communication_mass;
 	double propulsion_mass;
 	double volume_tank;
-	public CostModel(double duration, Mass m, double power, double factor) {
+	public CostModel(double duration, Mass m, double power) {
 		this.duration = duration;
 		this.dry_mass = m.getDryMass();
 		this.power = power;
-		this.factor_esa_nasa = 1;
 		
 		/** Calcul du cout haut niveau dans le constructeur du model **/
 		double data_rate = 0.3;
@@ -47,7 +44,6 @@ public class CostModel {
 				(Math.pow(2.718,1.52*new_techno)) * (Math.pow(2.718,0.258*interplanetary)) *
 				(1/(Math.pow(2.718,0.0145*year))) * (Math.pow(2.718,0.467*complexity)) * (1/(Math.pow(2.718,0.237*experience)));
 		this.global_cost = this.global_cost * inflation;
-		this.global_cost = this.global_cost * factor_esa_nasa;
 		this.global_cost = this.global_cost * 1e3; // from k� to �
 		
 		
