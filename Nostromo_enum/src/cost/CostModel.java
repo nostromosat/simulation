@@ -7,8 +7,9 @@ import cargo.Mass;
 public class CostModel {
 	
 	double duration;		//s
-	double power;			// Watt
+	double power;			// Watt 
 	
+	/* factor_esa_nasa => Model calculated on NASA consideration, factor needed to go back to an european
 	 * mission cost
 	 */
 	Mass m;
@@ -16,7 +17,9 @@ public class CostModel {
 	double global_cost;
 	double detailed_cost;
 	double dry_mass;
-	double inflation = 1.15;
+	double inflation = 1.15; // sans unite
+	double taux_change = 0.88429; // sans unite
+	double factor_esa_nasa = 1; // sans unite
 	double plateform_mass;
     double structure_mass;
 	double thermic_mass;
@@ -30,6 +33,7 @@ public class CostModel {
 		this.duration = duration;
 		this.dry_mass = m.getDryMass();
 		this.power = power;
+		this.factor_esa_nasa = 1;
 		
 		/** Calcul du cout haut niveau dans le constructeur du model **/
 		double data_rate = 0.3;
@@ -44,6 +48,8 @@ public class CostModel {
 				(Math.pow(2.718,1.52*new_techno)) * (Math.pow(2.718,0.258*interplanetary)) *
 				(1/(Math.pow(2.718,0.0145*year))) * (Math.pow(2.718,0.467*complexity)) * (1/(Math.pow(2.718,0.237*experience)));
 		this.global_cost = this.global_cost * inflation;
+		this.global_cost = this.global_cost * factor_esa_nasa;
+		this.global_cost = this.global_cost * taux_change;
 		this.global_cost = this.global_cost * 1e3; // from k� to �
 		
 		
@@ -78,7 +84,7 @@ public class CostModel {
 		double program_cost_r = 0.320 * (communication_cost_r + structure_cost_r + scao_cost_r + power_cost_r + propulsion_cost_r + command_cost_r + ait_cost_r);
 		double launch_cost = 11.25 * dry_mass + 5850;
 		double groundsegment_cost = 5000 * (duration/(60*60*24*365));
-		this.detailed_cost = 0.88429 * inflation * (structure_cost_nr + scao_cost_nr + power_cost_nr + propulsion_cost_nr + 
+		this.detailed_cost = factor_esa_nasa * taux_change * inflation * (structure_cost_nr + scao_cost_nr + power_cost_nr + propulsion_cost_nr + 
 				command_cost_nr + communication_cost_nr + ait_cost_nr + program_cost_nr + 
 				structure_cost_r + scao_cost_r + power_cost_r + propulsion_cost_r + command_cost_r + 
 				communication_cost_r + ait_cost_r + program_cost_r + launch_cost + groundsegment_cost);
