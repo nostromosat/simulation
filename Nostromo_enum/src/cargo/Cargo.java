@@ -67,4 +67,8 @@ public class Cargo {
 	public Panel getPanel(){
 		return this.panel;
 	}
+	
+	public void setMass(Mass masse) {
+		this.cargo_mass=masse;
+	}
 }

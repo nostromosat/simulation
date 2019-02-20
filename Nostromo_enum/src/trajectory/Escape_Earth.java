@@ -100,7 +100,7 @@ public class Escape_Earth {
 			t=t+Constant.s2d;
 			System.out.println(a);
 		}
-		System.out.println("Termin�");
+		System.out.println("Termine");
 		System.out.println("Temps (jour): ");
 		System.out.println(t/86400);
 		System.out.println(i);
@@ -112,11 +112,11 @@ public class Escape_Earth {
 		return list_param;
 	}
 	
-	public ArrayList<Double> Escape(double deltaV, double temps) {
+	public ArrayList<Double> Escape() {
 		ArrayList<Double> list_param = new ArrayList<Double>();
-		list_param.add(deltaV);
 		list_param.add(0.0);
-		list_param.add(temps/86400);
+		list_param.add(0.0);
+		list_param.add(10.0);
 		return list_param;
 	}
 	

@@ -106,16 +106,17 @@ public class Reach_Asteroid {
 		ArrayList<Double> list_param = new ArrayList<Double>();
 		double deltaV1=-Math.sqrt(2*mu/rT-mu/a)+Math.sqrt(mu/rT);
 		double deltaV2=-Math.sqrt(mu/rA)+Math.sqrt(2*mu/rA-mu/a);
-		//System.out.println(deltaV1);
-		//System.out.println(deltaV2);
+		System.out.println(deltaV1);
+		System.out.println(deltaV2);
 		double deltaV=deltaV1 + deltaV2;
 		double n=rA/rT;
 		double factor_lT=1/(Math.sqrt(2*(1+2*Math.sqrt(n)/(n+1)))-1);
 		deltaV=factor_lT*deltaV;
 		double dureeH=Math.PI*Math.sqrt(Math.pow(a, 3)/mu);
-		double deltaV_inc=Math.sqrt(mu/rT)*(2-2*Math.cos(0.5*Math.PI*(this.inc_Earth-this.inclination)));
-	//	System.out.println("INCLINATION "+deltaV_inc);
+		double deltaV_inc=2*Math.sqrt(mu/rT)*(Math.sin(0.5*(Math.abs(this.inc_Earth-this.inclination))));
+		System.out.println("INCLINATION "+deltaV_inc);
 		deltaV=deltaV+deltaV_inc;
+		//deltaV=1.2*deltaV; // FUMAGE
 		list_param.add(deltaV);
 		double deltaM=masse*(1-Math.exp(-deltaV/(this.Isp*Constant.g0)));
 
@@ -127,7 +128,7 @@ public class Reach_Asteroid {
 		double acc=poussee/masse;
 		double duree_lT=deltaV/acc;
 		//System.out.println("Duree low thrust  "+  (duree_lT/86400));
-		if (dureeH<2*duree_lT) {
+		if (dureeH<duree_lT) {
 			//System.out.println("IMPOSSIBLE LOW THRUST");
 			list_param.set(3, 0.0);
 
@@ -185,7 +186,7 @@ public class Reach_Asteroid {
 		double n=rA/rT;
 		double factor_lT=1/(Math.sqrt(2*(1+2*Math.sqrt(n)/(n+1)))-1);
 		deltaV=factor_lT*deltaV;
-		double deltaV_inc=Math.sqrt(mu/rT)*(2-2*Math.cos(0.5*Math.PI*(this.inc_Earth-this.inclination)));
+		double deltaV_inc=2*Math.sqrt(mu/rT)*(Math.sin(0.5*(Math.abs(this.inc_Earth-this.inclination))));
 		//	System.out.println("INCLINATION "+deltaV_inc);
 		deltaV=deltaV+deltaV_inc;
 		deltaM=masse*(1-Math.exp(-deltaV/(this.Isp*Constant.g0)));
@@ -199,11 +200,85 @@ public class Reach_Asteroid {
 		double acc=poussee/masse;
 		double duree_lT=deltaV/acc;
 		//System.out.println("Duree low thrust  "+  (duree_lT/86400));
-		if (dureeH<2*duree_lT) {
+		if (dureeH<duree_lT) {
 			//System.out.println("IMPOSSIBLE LOW THRUST");
 			list_param.set(3, 0.0);
 		}
 		list_param.add((180/3.14)*Math.abs(Math.PI-M));
+		return list_param;
+	}
+	
+	
+	
+	public ArrayList<Double> rdvBiElliptic(double duree,double masse, double poussee) {
+		double mu=Constant.muS;
+		double rT=this.sma_Earth;
+		double rA=this.semi_major_axis;
+		double a=0.5*(rT+rA);
+		ArrayList<Double> list_param = new ArrayList<Double>();
+		double deltaV1=-Math.sqrt(2*mu/rT-mu/a)+Math.sqrt(mu/rT);
+		double deltaV2=-Math.sqrt(mu/rA)+Math.sqrt(2*mu/rA-mu/a);
+		double deltaV3=0;
+		//System.out.println("dV1 "+deltaV1);
+		//System.out.println("dV2 "+deltaV2);
+		//System.out.println("dV3 "+deltaV3);
+		double deltaV=deltaV1 + deltaV2;
+		double deltaM=masse*(1-Math.exp(-deltaV/(this.Isp*Constant.g0)));
+		double dureeH=Math.abs(Math.PI)*Math.sqrt(rT*rT*rT/mu)+Math.abs(Math.PI)*Math.sqrt(a*a*a/mu);
+;
+		double duration=dureeH/86400;
+		double rb=rT;
+		//System.out.println(duration);
+		double M=0;
+		double a1=0;
+		double a2=0;
+		//System.out.println("ATTEINDRE "+duree+ " jours");
+		//System.out.println(duration+ " jours");
+
+		while (Math.abs((duration-duree))>5) {
+			rb=rb*1.001;
+			a1=0.5*(rb+rT); //rT
+			a2=0.5*(rb+rA); //a
+			deltaV1=Math.abs(Math.sqrt(mu/rT)-Math.sqrt(2*mu/rT-mu/a1));
+			deltaV2=Math.abs(Math.sqrt(2*mu/rb-mu/a1)-Math.sqrt(2*mu/rb-mu/a2));
+			deltaV3=Math.abs(Math.sqrt(mu/rA)-Math.sqrt(2*mu/rA-mu/a2));
+			//System.out.println("dV1 "+deltaV1);
+			//System.out.println("dV2 "+deltaV2);
+			//System.out.println("dV3 "+deltaV3);
+
+
+			duration=Math.abs(Math.PI)*Math.sqrt(a1*a1*a1/mu)/86400+Math.abs(Math.PI)*Math.sqrt(a2*a2*a2/mu)/86400;;
+			//System.out.println("duree transfert  "+duration);
+
+			if (duration>duree) {
+				break;
+			}
+			
+			deltaV=deltaV1+deltaV2+deltaV3;
+			deltaM=masse*(1-Math.exp(-deltaV/(this.Isp*Constant.g0)));
+
+		}
+
+
+		double deltaV_inc=2*Math.sqrt(mu/rT)*(Math.sin(0.5*(Math.abs(this.inc_Earth-this.inclination))));
+		//	System.out.println("INCLINATION "+deltaV_inc);
+		double deltaV0=deltaV;
+		deltaV=deltaV+deltaV_inc;
+		deltaM=masse*(1-Math.exp(-deltaV/(this.Isp*Constant.g0)));
+
+		//System.out.println("Angle dephasage  "+(180/3.14)*Math.abs(Math.PI-M));
+		//System.out.println("dephasage par an  "+(this.meanmotion-this.meanmotion_Earth)*365);
+		list_param.add(deltaV);
+		list_param.add(deltaM);
+		list_param.add(duration);
+		list_param.add(1.0);
+		double acc=poussee/masse;
+		double duree_lT=deltaV0/acc;
+		//System.out.println("Duree low thrust  "+  (duree_lT/86400));
+		if (dureeH<duree_lT) {
+			//System.out.println("IMPOSSIBLE LOW THRUST");
+			list_param.set(3, 0.0);
+		}
 		return list_param;
 	}
 	

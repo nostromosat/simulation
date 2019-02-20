@@ -69,7 +69,20 @@ public class MainTest {
 
 		 */
 		
-		Trajectory.computeTrajectoryHohmann(15000, 100000, 4, 3000, 100);
+		/*
+		Reach_Asteroid re=new Reach_Asteroid(ISP);
+		ArrayList<Double> listH =re.rdvHohmann(15000,2);
+	//	ArrayList<Double> list =re.rdvBiElliptic(400,15000,2);
+		ArrayList<Double> list2 =re.rdvFastHohmann(100,15000,2);
+	*/
+		
+		//Return_To_Earth ret=new Return_To_Earth(ISP);
+		//ArrayList<Double> listret= ret.rdvBiElliptic(400,15000.0, 10000,2);
+		
+		//System.out.println(listret.toString());
+		
+		
+		
 	}
 
 }
