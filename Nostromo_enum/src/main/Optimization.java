@@ -48,7 +48,7 @@ public class Optimization {
 							propu.setnEngine(i);
 							Mass miss_mass = new Mass(panel_mass,propu.getDryMass()*propu.getnEngine(),fuel_mass,ore_mass);
 							Mission miss = new Mission(target,miss_mass,propu,launch);
-							double kgcost = miss.getKmCost();
+							double kgcost = miss.getKgCost();
 							if(kgcost < min_price){
 								missions_done.add(miss);
 								min_price = kgcost;
