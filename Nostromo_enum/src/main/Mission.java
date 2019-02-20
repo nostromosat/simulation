@@ -36,15 +36,6 @@
  		this.launcher = launcher;
  		this.nostromo = new Cargo(propulsion, cargo_mass);
  	}
-	 
-	  	
-	Mission(Asteroid target, Mass cargo_mass, Propulsion propulsion, Launcher launcher, Panel pan) {
- 		this.target = target;
- 		this.launcher = launcher;
- 		this.nostromo = new Cargo(propulsion, cargo_mass);
- 		this.nostromo.setPanel(pan);
- 	}	
- 	
  	
  	/** Print mission details **/
  	public void showDetails(){
