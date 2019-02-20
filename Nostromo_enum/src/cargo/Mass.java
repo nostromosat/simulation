@@ -56,11 +56,11 @@ public class Mass {
 
 	}
 	public Mass(double powerMass, double propulsionMass, double fuelMass,double ore_mass){
-		System.out.println(powerMass+"  "+propulsionMass+"  "+fuelMass);
+		//System.out.println(powerMass+"  "+propulsionMass+"  "+fuelMass);
 		setPwrMass(powerMass);
 		setPropuMass(Constant.HYDMF*(propulsionMass + fuelMass/Constant.Xe_density*Constant.TCD));
 		setFuelMass(fuelMass);
-		System.out.println(this.PROPU_mass);
+		//System.out.println(this.PROPU_mass);
 
 		
 		// mass distribution calculated on 5 different missions (% of total mass)
@@ -156,7 +156,7 @@ public class Mass {
 		return this.total_mass;
 	}
 	public double getDryMass(){
-		return this.total_mass - this.fuel_mass - this.ore_mass;
+		return this.total_mass - this.fuel_mass;
 	}
 	
 	/** Set functions **/
@@ -222,10 +222,12 @@ public class Mass {
 		System.out.println(".....Data Handling: " + this.DH_mass + " kg");
 		System.out.println(".....Harness: " + this.HAR_mass + " kg");
 		System.out.println(".....Mechanisms: " + this.MEC_mass + " kg");
-		System.out.println(".....Propulsion: " + this.PROPU_mass + " kg");
+		System.out.println(".....Propulsion & Tanks: " + this.PROPU_mass + " kg");
 		System.out.println(".....Power: " + this.PWR_mass + " kg");
 		System.out.println(".....Structure: " + this.STR_mass + " kg");
 		System.out.println(".....Thermal control: " + this.TC_mass + " kg");
+		System.out.println(".....Container: " + this.ore_mass*this.container_factor + " kg");
+
 		System.out.println(".....");
 		System.out.println(".....Propellant: " + this.fuel_mass + " kg");
 		System.out.println(".....Asteroid's ore: " + this.ore_mass + " kg");

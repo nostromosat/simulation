@@ -215,8 +215,8 @@ public class Return_To_Earth {
 		//System.out.println(duration);
 		double a1=0;
 		double a2=0;
-		System.out.println("ATTEINDRE "+duree+ " jours");
-		System.out.println(duration+ " jours");
+		//System.out.println("ATTEINDRE "+duree+ " jours");
+		//System.out.println(duration+ " jours");
 
 		while (Math.abs((duration-duree))>5) {
 			rb=rb*1.001;
@@ -225,13 +225,13 @@ public class Return_To_Earth {
 			deltaV3=Math.abs(Math.sqrt(mu/rT)-Math.sqrt(2*mu/rT-mu/a1));
 			deltaV2=Math.abs(Math.sqrt(2*mu/rb-mu/a1)-Math.sqrt(2*mu/rb-mu/a2));
 			deltaV1=Math.abs(Math.sqrt(mu/rA)-Math.sqrt(2*mu/rA-mu/a2));
-			System.out.println("dV1 "+deltaV1);
-			System.out.println("dV2 "+deltaV2);
-			System.out.println("dV3 "+deltaV3);
+			//System.out.println("dV1 "+deltaV1);
+			//System.out.println("dV2 "+deltaV2);
+			//System.out.println("dV3 "+deltaV3);
 
 
 			duration=Math.abs(Math.PI)*Math.sqrt(a1*a1*a1/mu)/86400+Math.abs(Math.PI)*Math.sqrt(a2*a2*a2/mu)/86400;;
-			System.out.println("duree transfert  "+duration);
+			//System.out.println("duree transfert  "+duration);
 
 			if (duration>duree) {
 				break;
@@ -257,9 +257,9 @@ public class Return_To_Earth {
 		list_param.add(1.0);
 		double acc=poussee/masse;
 		double duree_lT=deltaV0/acc;
-		System.out.println("Duree low thrust  "+  (duree_lT/86400));
+		//System.out.println("Duree low thrust  "+  (duree_lT/86400));
 		if (dureeH<duree_lT) {
-			System.out.println("IMPOSSIBLE LOW THRUST");
+			//System.out.println("IMPOSSIBLE LOW THRUST");
 			list_param.set(3, 0.0);
 		}
 		return list_param;

@@ -98,6 +98,9 @@
  	
  	public CostModel getcost(){
  		this.launch(this.nostromo.getMass().getOreMass(),this.nostromo.getPropulsion());
+ 		System.out.println(this.duration);
+ 		System.out.println(this.nostromo.getMass().getDryMass());
+ 		System.out.println(this.nostromo.getPropulsion().getPower());
  		return new CostModel(this.duration,this.nostromo.getMass(),this.nostromo.getPropulsion().getPower());
  	}
  	
@@ -121,10 +124,10 @@
  		/**********************Dorian part******************************/
  		for (int i=0;i<100;i++) {
  		
-		ArrayList<Double> traj = Trajectory.computeTrajectoryEllipticLEO(m0, m1, total_thrust, ISP, 100000);
-		//	ArrayList<Double> traj = Trajectory.computeTrajectoryEllipticGTO(m0, m1, total_thrust, ISP, 200000,36000000);
+		ArrayList<Double> traj = Trajectory.computeTrajectoryHohmann(m0, m1, total_thrust, ISP, 100000);
+		//ArrayList<Double> traj = Trajectory.computeTrajectoryEllipticGTO(m0, m1, total_thrust, ISP, 200000,36000000);
 
-		//	ArrayList<Double> traj = Trajectory.computeTrajectoryEllipticEscape(m0, m1, total_thrust, ISP); 		double dM_total=traj.get(1);
+		//ArrayList<Double> traj = Trajectory.computeTrajectoryEllipticEscape(m0, m1, total_thrust, ISP); 		
 		this.dV_total = traj.get(0);
 		double dM_total=traj.get(1);
  		this.duration = traj.get(2);
@@ -133,6 +136,7 @@
  		//masstot.showDetails();
  		m0=masstot.getTotalMass();
  		this.nostromo.setMass(masstot);
+ 		
  		System.out.println("Masse totale recalculee :  " + masstot.getTotalMass());
  		}
  		
@@ -153,6 +157,7 @@
  		ionic.setnEngine(4);
  		Launcher launcher = Launcher.Ariane64_LEO;
  		Panel pan = new Panel(ionic, target);
+ 		System.out.println(pan.getMass());
  		Mass cargo_mass = new Mass(pan.getMass(),ionic.getDryMass()*ionic.getnEngine(),500,mass_wanted);
  		
  		Mission first_try = new Mission(target, cargo_mass, ionic,launcher);	
@@ -170,13 +175,15 @@
  		first_try.nostromo.getMass().showDetails();
  		
  		/** Trajectory test **/
- 		first_try.launch(mass_wanted, ionic);
+ 		//first_try.launch(mass_wanted, ionic);
  		
  		/** IHM **/
  		//Window.WindowLaunch(first_try);
  		
  		/** Cost part **/
+
  		System.out.println(first_try.getcost().costStr());
+
  	}
  	
  }
