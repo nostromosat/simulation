@@ -5,6 +5,7 @@ public class Mass {
 	
 	private double fuel_mass;	// propellant
 	private double ore_mass;	// asteroid's ore we carry
+	private double container_factor = 0.05;
 	private double total_mass;	// total mass
 	private boolean panel_done = false;
 	
@@ -112,7 +113,7 @@ public class Mass {
 	public void UpdateTotalMass() {
 		this.total_mass = this.AOGNC_mass + this.COM_mass + this.DH_mass + this.HAR_mass +
 				this.MEC_mass + this.PROPU_mass + this.PWR_mass + this.STR_mass +
-				this.TC_mass + this.fuel_mass + this.ore_mass;
+				this.TC_mass + this.fuel_mass + this.ore_mass*this.container_factor;
 	}
 	
 	/** Get functions **/
