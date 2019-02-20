@@ -6,6 +6,7 @@ import java.util.List;
 import cost.CostModel;
 import cargo.Launcher;
 import cargo.Mass;
+import cargo.Panel;
 import cargo.Propulsion;
 import asteroid.Asteroid;
 
@@ -35,7 +36,6 @@ public class Optimization {
 		double min_price = Double.MAX_VALUE;
 
 		// Il faut fixer la masse des panneaux plus efficacement, et surtout la masse du fuel !! ici 1000 panel, 2000 fuel.
-		int panel_mass = 1000;
 		int max_fuel_mass = 3000;
 		int max_ore_mass = 5000;
 
@@ -46,13 +46,14 @@ public class Optimization {
 						for(Launcher launch : Launcher.values()){
 							n++;
 							propu.setnEngine(i);
-							Mass miss_mass = new Mass(panel_mass,propu.getDryMass()*propu.getnEngine(),fuel_mass,ore_mass);
-							Mission miss = new Mission(target,miss_mass,propu,launch);
-							double kgcost = miss.getKgCost();
+							Panel pan = new Panel(propu,target);
+							Mass miss_mass = new Mass(pan.getMass(),propu.getDryMass()*propu.getnEngine(),fuel_mass,ore_mass);
+							Mission miss = new Mission(target,miss_mass,propu,launch,pan);
+							double kgcost =miss.getKgCost();
 							if(kgcost < min_price){
 								missions_done.add(miss);
 								min_price = kgcost;
-								best_ind = missions_done.size();
+								best_ind = missions_done.size()-1;
 							}
 						}
 					}
@@ -66,5 +67,16 @@ public class Optimization {
 		long endTime = System.currentTimeMillis();
 
 		System.out.println("\nThat took " + Math.round((endTime - startTime)/10)/100 + " seconds");
+		
+		System.out.println("Best case caracteristics:");
+		missions_done.get(best_ind).launcher.showDetails();
+		missions_done.get(best_ind).nostromo.showDetails();
+		missions_done.get(best_ind).nostromo.getMass().showDetails();
+		missions_done.get(best_ind).nostromo.getPropulsion().showDetails();
+		System.out.println(new CostModel(missions_done.get(best_ind).duration,
+				missions_done.get(best_ind).nostromo.getMass(),
+				missions_done.get(best_ind).nostromo.getPropulsion().getPower()).cost()+" €");
+		System.out.println("\ndV total: "+missions_done.get(best_ind).dV_total);
+		System.out.println("Total duration: "+missions_done.get(best_ind).duration);		
 	}
 }
