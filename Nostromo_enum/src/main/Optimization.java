@@ -37,16 +37,16 @@ public class Optimization {
 		// Il faut fixer la masse des panneaux plus efficacement, et surtout la masse du fuel !! ici 1000 panel, 2000 fuel.
 		int panel_mass = 1000;
 		int max_fuel_mass = 3000;
-		int max_ore_mass = 5000;
+		int max_ore_mass = 10000;
 
 		for(int ore_mass=500;ore_mass<max_ore_mass;ore_mass += 500){
-			for(int fuel_mass=500; fuel_mass < max_fuel_mass; fuel_mass += 500){
+		//	for(int fuel_mass=500; fuel_mass < max_fuel_mass; fuel_mass += 500){
 				for(Propulsion propu : Propulsion.values()){
 					for(int i=1;i<nMax;i++){
 						for(Launcher launch : Launcher.values()){
 							n++;
 							propu.setnEngine(i);
-							Mass miss_mass = new Mass(panel_mass,propu.getDryMass()*propu.getnEngine(),fuel_mass,ore_mass);
+							Mass miss_mass = new Mass(panel_mass,propu.getDryMass()*propu.getnEngine(),max_fuel_mass,ore_mass);
 							Mission miss = new Mission(target,miss_mass,propu,launch);
 							double kgcost = miss.getKgCost();
 							if(kgcost < min_price){
@@ -56,7 +56,7 @@ public class Optimization {
 							}
 						}
 					}
-				}
+		//		}
 			}
 		}
 		System.out.println("Number of cases tried: "+n+".");
