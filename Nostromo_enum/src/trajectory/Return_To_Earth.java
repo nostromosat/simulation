@@ -238,7 +238,7 @@ public class Return_To_Earth {
 			}
 			
 			deltaV=deltaV1+deltaV2+deltaV3;
-			deltaM=masse*(1-Math.exp(-deltaV/(this.Isp*Constant.g0)));
+			deltaM=(masse+masse_minerai)*(1-Math.exp(-deltaV/(this.Isp*Constant.g0)));
 
 		}
 
@@ -247,7 +247,7 @@ public class Return_To_Earth {
 		//	System.out.println("INCLINATION "+deltaV_inc);
 		double deltaV0=deltaV;
 		deltaV=deltaV+deltaV_inc;
-		deltaM=masse*(1-Math.exp(-deltaV/(this.Isp*Constant.g0)));
+		deltaM=(masse++masse_minerai)*(1-Math.exp(-deltaV/(this.Isp*Constant.g0)));
 
 		//System.out.println("Angle dephasage  "+(180/3.14)*Math.abs(Math.PI-M));
 		//System.out.println("dephasage par an  "+(this.meanmotion-this.meanmotion_Earth)*365);
@@ -255,7 +255,7 @@ public class Return_To_Earth {
 		list_param.add(deltaM);
 		list_param.add(duration);
 		list_param.add(1.0);
-		double acc=poussee/masse;
+		double acc=poussee/(masse++masse_minerai);
 		double duree_lT=deltaV0/acc;
 		//System.out.println("Duree low thrust  "+  (duree_lT/86400));
 		if (dureeH<duree_lT) {
