@@ -37,7 +37,7 @@ public class Optimization {
 
 		// Il faut fixer la masse des panneaux plus efficacement
 		int fuel_mass = 5000;
-		int max_ore_mass = 50000;
+		int max_ore_mass = 15000;
 		Propulsion propu = Propulsion.PPS1350_safran;
 
 		for(int ore_mass=250;ore_mass<=max_ore_mass;ore_mass += 250){
