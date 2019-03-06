@@ -99,6 +99,9 @@ public class CostModel {
 		//Calcul du cout par kilometres de la mission.
 		return this.detailed_cost / distance ;
 	}
+	public String bothCosts(double mass){
+		return "Total cost: "+simplified(this.detailed_cost,1)+"\nKg cost: "+simplified(this.KgCost(mass),1);
+	}
 	public double KgCost(double transportable_mass){
 		return this.detailed_cost / transportable_mass;
 	}
